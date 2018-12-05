@@ -55,8 +55,6 @@ defmodule RoboticaUi.Scene.Home do
       |> Graph.modify(:text, &text(&1, message, style))
       |> push_graph()
 
-    IO.inspect(password)
-
     if ok == true do
         client_id = RoboticaUi.get_tortoise_client_id()
         Tortoise.publish(client_id, "cmnd/sonoff/power", "on", qos: 0)

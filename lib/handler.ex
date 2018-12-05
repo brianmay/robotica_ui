@@ -3,28 +3,40 @@ defmodule RoboticaUi.Handler do
 
   alias Scenic.ViewPort
 
-  def init(args) do
-    {:ok, args}
+  def init(_args) do
+    {:ok, %{power: nil}}
   end
 
-  def connection(_status, state) do
-    # `status` will be either `:up` or `:down`; you can use this to
-    # inform the rest of your system if the connection is currently
-    # open or closed; tortoise should be busy reconnecting if you get
-    # a `:down`
+  def connection(:up, %{power: power} = state) do
+    # Send request for current power level, as we have no idea.
+    client_id = RoboticaUi.get_tortoise_client_id()
+    Tortoise.publish(client_id, "cmnd/sonoff/power", "off", qos: 0)
+
+    # Try to guess viewport based on last known power state.
+    case power do
+        :on -> ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.On, nil})
+        :off -> ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.Home, nil})
+
+        # No known last state, just leave viewport as as for now.
+        nil -> nil
+    end
+
+    {:ok, state}
+  end
+
+  def connection(:down, state) do
+    ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.Error, nil})
     {:ok, state}
   end
 
   def handle_message(["stat", "sonoff", "POWER"], "on", state) do
-    IO.inspect(state)
     ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.On, nil})
-    {:ok, state}
+    {:ok, %{state | power: :on}}
   end
 
   def handle_message(["stat", "sonoff", "POWER"], "off", state) do
-    IO.inspect(state)
     ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.Home, nil})
-    {:ok, state}
+    {:ok, %{state | power: :off}}
   end
 
   def handle_message(_topic, _payload, state) do
