@@ -59,6 +59,8 @@ defmodule RoboticaUi.Scene.Home do
     IO.inspect(password)
 
     if ok == true do
+        client_id = RoboticaUi.get_tortoise_client_id()
+        Tortoise.publish(client_id, "cmnd/sonoff/power", "on", qos: 0)
         ViewPort.set_root(vp, {RoboticaUi.Scene.Off, nil})
     end
 

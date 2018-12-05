@@ -22,6 +22,8 @@ defmodule RoboticaUi.Scene.Off do
   end
 
   def filter_event({:click, _}, _, %{viewport: vp}) do
+    client_id = RoboticaUi.get_tortoise_client_id()
+    Tortoise.publish(client_id, "cmnd/sonoff/power", "off", qos: 0)
     ViewPort.set_root(vp, {RoboticaUi.Scene.Home, nil})
     {:stop, %{viewport: vp}}
   end
