@@ -1,5 +1,7 @@
 %{
   "elixir_make": {:hex, :elixir_make, "0.4.2", "332c649d08c18bc1ecc73b1befc68c647136de4f340b548844efc796405743bf", [:mix], [], "hexpm"},
+  "gen_state_machine": {:hex, :gen_state_machine, "2.0.4", "cc31749b8ee50d42c8db7d96c85637c4c9fdc7a007145c8aa2f371c89148a6ca", [:mix], [], "hexpm"},
   "scenic": {:hex, :scenic, "0.9.0", "129594f918b4e2dd97465b95b4fb3582294ac6bb3e931f12edd09913743964eb", [:make, :mix], [{:elixir_make, "~> 0.4", [hex: :elixir_make, repo: "hexpm", optional: false]}], "hexpm"},
   "scenic_driver_glfw": {:hex, :scenic_driver_glfw, "0.9.0", "4c7a8300b71ec7174bc7f7d142d1eefbfe345520ed303bab2716a65fc9a21a8c", [:make, :mix], [{:elixir_make, "~> 0.4", [hex: :elixir_make, repo: "hexpm", optional: false]}, {:scenic, "~> 0.9", [hex: :scenic, repo: "hexpm", optional: false]}], "hexpm"},
+  "tortoise": {:hex, :tortoise, "0.9.4", "3bca5f4475f80a5bd45aab644ddb3364dd0956b67f4202dcef6ed20e045ea3a6", [:mix], [{:gen_state_machine, "~> 2.0", [hex: :gen_state_machine, repo: "hexpm", optional: false]}], "hexpm"},
 }

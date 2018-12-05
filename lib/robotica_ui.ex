@@ -3,6 +3,12 @@ defmodule RoboticaUi do
   Starter application using the Scenic framework.
   """
 
+  def get_tortoise_client_id do
+    {:ok, hostname} = :inet.gethostname()
+    hostname = to_string(hostname)
+    "robotica_ui-#{hostname}"
+  end
+
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
@@ -11,7 +17,12 @@ defmodule RoboticaUi do
 
     # start the application with the viewport
     children = [
-      supervisor(Scenic, viewports: [main_viewport_config])
+      supervisor(Scenic, viewports: [main_viewport_config]),
+      {Tortoise.Connection,
+       client_id: get_tortoise_client_id(),
+       handler: {RoboticaUi.Handler, []},
+       server: {Tortoise.Transport.Tcp, host: "localhost", port: 1883},
+       subscriptions: [{"stat/sonoff/POWER", 0}]}
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one)

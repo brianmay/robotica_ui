@@ -25,6 +25,7 @@ defmodule RoboticaUi.MixProject do
     [
       {:scenic, "~> 0.9"},
       {:scenic_driver_glfw, "~> 0.9"},
+      {:tortoise, "~> 0.9"},
     ]
   end
 end
