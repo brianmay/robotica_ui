@@ -1,7 +1,6 @@
 defmodule RoboticaUi.Scene.On do
   use Scenic.Scene
 
-  alias Scenic.ViewPort
   alias Scenic.Graph
 
   import Scenic.Primitives
@@ -16,15 +15,14 @@ defmodule RoboticaUi.Scene.On do
   # setup
 
   # --------------------------------------------------------
-  def init(_, opts) do
+  def init(_, _opts) do
     push_graph( @graph )
-    {:ok, %{viewport: opts[:viewport]}}
+    {:ok, %{}}
   end
 
-  def filter_event({:click, _}, _, %{viewport: vp}) do
+  def filter_event({:click, _}, _, %{}) do
     client_id = RoboticaUi.get_tortoise_client_id()
     Tortoise.publish(client_id, "cmnd/sonoff/power", "off", qos: 0)
-    ViewPort.set_root(vp, {RoboticaUi.Scene.Home, nil})
-    {:stop, %{viewport: vp}}
+    {:stop, %{}}
   end
 end

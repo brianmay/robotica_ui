@@ -1,7 +1,6 @@
 defmodule RoboticaUi.Scene.Home do
   use Scenic.Scene
 
-  alias Scenic.ViewPort
   alias Scenic.Graph
 
   import Scenic.Primitives
@@ -27,12 +26,12 @@ defmodule RoboticaUi.Scene.Home do
   # setup
 
   # --------------------------------------------------------
-  def init(_, opts) do
+  def init(_, _opts) do
     push_graph( @graph )
-    {:ok, %{password: "", viewport: opts[:viewport]}}
+    {:ok, %{password: ""}}
   end
 
-  def filter_event({:click, button}, _, %{password: password, viewport: vp}) do
+  def filter_event({:click, button}, _, %{password: password}) do
     ok =
         case button do
             :btn_enter -> password == "1234"
@@ -61,9 +60,8 @@ defmodule RoboticaUi.Scene.Home do
     if ok == true do
         client_id = RoboticaUi.get_tortoise_client_id()
         Tortoise.publish(client_id, "cmnd/sonoff/power", "on", qos: 0)
-        ViewPort.set_root(vp, {RoboticaUi.Scene.Off, nil})
     end
 
-    {:stop, %{password: password, viewport: vp}}
+    {:stop, %{password: password}}
   end
 end
