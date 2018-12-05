@@ -17,7 +17,7 @@ defmodule RoboticaUi.Handler do
 
   def handle_message(["stat", "sonoff", "POWER"], "on", state) do
     IO.inspect(state)
-    ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.Off, nil})
+    ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.On, nil})
     {:ok, state}
   end
 

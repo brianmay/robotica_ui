@@ -1,4 +1,4 @@
-defmodule RoboticaUi.Scene.Off do
+defmodule RoboticaUi.Scene.On do
   use Scenic.Scene
 
   alias Scenic.ViewPort
