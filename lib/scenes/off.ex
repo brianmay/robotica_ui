@@ -1,4 +1,4 @@
-defmodule RoboticaUi.Scene.Home do
+defmodule RoboticaUi.Scene.Off do
   use Scenic.Scene
 
   alias Scenic.Graph
@@ -19,7 +19,7 @@ defmodule RoboticaUi.Scene.Home do
   |> button("7", id: "7", translate: {20, 50})
   |> button("8", id: "8", translate: {120, 50})
   |> button("9", id: "9", translate: {220, 50})
-  |> text("Hello World", id: :text, text_align: :center, translate: {160, 400})
+  |> text("OFF", id: :text, text_align: :center, translate: {160, 400})
   |> circle(100, stroke: {2, :green}, translate: {160, 400})
 
   # ============================================================================
@@ -40,8 +40,8 @@ defmodule RoboticaUi.Scene.Home do
 
     password =
         case button do
-            :btn_clear -> ""
-            :btn_enter -> ""
+            :btn_clear -> "OFF"
+            :btn_enter -> "OFF"
             x -> password <> x
         end
 

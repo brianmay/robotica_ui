@@ -21,7 +21,7 @@ defmodule RoboticaUi do
       {Tortoise.Connection,
        client_id: get_tortoise_client_id(),
        handler: {RoboticaUi.Handler, []},
-       server: {Tortoise.Transport.Tcp, host: "localhost", port: 1883},
+       server: {Tortoise.Transport.Tcp, host: "proxy.pri", port: 1883},
        subscriptions: [{"stat/sonoff/POWER", 0}]}
     ]
 
