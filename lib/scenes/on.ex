@@ -3,13 +3,11 @@ defmodule RoboticaUi.Scene.On do
 
   alias Scenic.Graph
 
-  import Scenic.Primitives
-  import Scenic.Components
+  import RoboticaUi.Scene.Utils
 
   @graph Graph.build(font: :roboto, font_size: 24)
-         |> button("Turn Off TV", id: :btn_enter, translate: {20, 20}, width: 200)
-         |> text("ON", id: :text, text_align: :center, translate: {160, 400})
-         |> circle(100, stroke: {2, :green}, translate: {160, 400})
+         |> add_button("Off", :btn_enter, 0, 0)
+         |> add_status("ON", :green)
 
   # ============================================================================
   # setup

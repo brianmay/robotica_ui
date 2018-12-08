@@ -5,7 +5,7 @@ use Mix.Config
 # Configure the main viewport for the Scenic application
 config :robotica_ui, :viewport, %{
   name: :main_viewport,
-  size: {700, 600},
+  size: {800, 480},
   default_scene: {RoboticaUi.Scene.Loading, nil},
   drivers: [
     %{

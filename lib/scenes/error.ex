@@ -3,11 +3,10 @@ defmodule RoboticaUi.Scene.Error do
 
   alias Scenic.Graph
 
-  import Scenic.Primitives
+  import RoboticaUi.Scene.Utils
 
   @graph Graph.build(font: :roboto, font_size: 24)
-         |> text("No connection", fill: :red, text_align: :center, translate: {160, 400})
-         |> circle(100, stroke: {2, :red}, translate: {160, 400})
+         |> add_status("No connection", :red)
 
   # ============================================================================
   # setup

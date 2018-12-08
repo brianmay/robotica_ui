@@ -4,23 +4,23 @@ defmodule RoboticaUi.Scene.Off do
   alias Scenic.Graph
 
   import Scenic.Primitives
-  import Scenic.Components
+
+  import RoboticaUi.Scene.Utils
 
   @graph Graph.build(font: :roboto, font_size: 24)
-         |> button("C", id: :btn_clear, translate: {20, 200})
-         |> button("0", id: "0", translate: {120, 200})
-         |> button("E", id: :btn_enter, translate: {220, 200})
-         |> button("1", id: "1", translate: {20, 150})
-         |> button("2", id: "2", translate: {120, 150})
-         |> button("3", id: "3", translate: {220, 150})
-         |> button("4", id: "4", translate: {20, 100})
-         |> button("5", id: "5", translate: {120, 100})
-         |> button("6", id: "6", translate: {220, 100})
-         |> button("7", id: "7", translate: {20, 50})
-         |> button("8", id: "8", translate: {120, 50})
-         |> button("9", id: "9", translate: {220, 50})
-         |> text("OFF", id: :text, text_align: :center, translate: {160, 400})
-         |> circle(100, stroke: {2, :green}, translate: {160, 400})
+         |> add_button("C", :btn_clear, 0, 3)
+         |> add_button("0", "0", 1, 3)
+         |> add_button("E", :btn_enter, 2, 3)
+         |> add_button("1", "1", 0, 2)
+         |> add_button("2", "2", 1, 2)
+         |> add_button("3", "3", 2, 2)
+         |> add_button("4", "4", 0, 1)
+         |> add_button("5", "5", 1, 1)
+         |> add_button("6", "6", 2, 1)
+         |> add_button("7", "7", 0, 0)
+         |> add_button("8", "8", 1, 0)
+         |> add_button("9", "9", 2, 0)
+         |> add_status("OFF", :green)
 
   # ============================================================================
   # setup
@@ -40,8 +40,8 @@ defmodule RoboticaUi.Scene.Off do
 
     password =
       case button do
-        :btn_clear -> "OFF"
-        :btn_enter -> "OFF"
+        :btn_clear -> ""
+        :btn_enter -> ""
         x -> password <> x
       end
 
@@ -49,7 +49,7 @@ defmodule RoboticaUi.Scene.Off do
       case ok do
         true -> {"Good", fill: :green}
         false -> {"Bad", fill: :red}
-        nil -> {"nil", []}
+        nil -> {"OFF", []}
       end
 
     @graph
