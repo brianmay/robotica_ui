@@ -23,6 +23,11 @@ defmodule RoboticaUi.Handler do
     {:ok, state}
   end
 
+  def connection(:terminated, state) do
+    ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.Error, nil})
+    {:ok, state}
+  end
+
   def handle_message(["stat", "sonoff", "POWER"], "ON", state) do
     ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.On, nil})
     {:ok, state}
