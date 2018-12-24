@@ -5,7 +5,7 @@ defmodule RoboticaUi.Scene.Message do
 
   import Scenic.Primitives
 
-  @graph Graph.build(font: :roboto, font_size: 24)
+  @graph Graph.build(font: :roboto, font_size: 36)
          |> text("", id: :text, text_align: :center, translate: {400, 240})
 
   # ============================================================================

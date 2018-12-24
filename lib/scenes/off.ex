@@ -2,12 +2,12 @@ defmodule RoboticaUi.Scene.Off do
   use Scenic.Scene
 
   alias Scenic.Graph
-
   import Scenic.Primitives
 
   import RoboticaUi.Scene.Utils
 
   @graph Graph.build(font: :roboto, font_size: 24)
+         |> rect({800, 480}, fill: :black)
          |> add_button("C", :btn_clear, 0, 3)
          |> add_button("0", "0", 1, 3)
          |> add_button("E", :btn_enter, 2, 3)
@@ -32,6 +32,8 @@ defmodule RoboticaUi.Scene.Off do
   end
 
   def filter_event({:click, button}, _, %{password: password}) do
+    RoboticaUi.RootManager.reset_screensaver()
+
     ok =
       case button do
         :btn_enter -> password == "1234"
@@ -62,5 +64,10 @@ defmodule RoboticaUi.Scene.Off do
     end
 
     {:stop, %{password: password}}
+  end
+
+  def handle_input(_event, _context, state) do
+    RoboticaUi.RootManager.reset_screensaver()
+    {:noreply, state}
   end
 end
