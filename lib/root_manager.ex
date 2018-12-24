@@ -17,9 +17,10 @@ defmodule RoboticaUi.RootManager do
   defmodule State do
     @type t :: %__MODULE__{
             scenes: Scenes.t(),
-            timer: reference() | nil
+            timer: reference() | nil,
+            scene: atom() | {atom(), any()} | nil
           }
-    defstruct scenes: %Scenes{}, timer: nil
+    defstruct scenes: %Scenes{}, timer: nil, scene: nil
   end
 
   def start_link(_opts) do
@@ -41,7 +42,7 @@ defmodule RoboticaUi.RootManager do
     GenServer.call(RoboticaUi.RootManager, {:reset_screensaver})
   end
 
-  @spec set_root(State.t()) :: nil
+  @spec set_root(State.t()) :: {:changed | :not_changed, State.t()}
   defp set_root(%State{} = state) do
     root_scene =
       cond do
@@ -49,9 +50,22 @@ defmodule RoboticaUi.RootManager do
         true -> state.scenes.root
       end
 
-    ViewPort.set_root(:main_viewport, root_scene)
+    current_scene = state.scene
+
+    do_change = root_scene != current_scene
+    Logger.info("set_root #{inspect do_change} #{inspect root_scene} #{inspect current_scene}")
+
+    case do_change do
+      true ->
+        ViewPort.set_root(:main_viewport, root_scene)
+        {:changed, %State{state | scene: root_scene}}
+
+      false ->
+        {:not_changed, state}
+    end
   end
 
+  @spec screen_off :: nil
   defp screen_off() do
     Logger.debug("screen_off")
     File.write!("/sys/class/backlight/rpi_backlight/bl_power", "1")
@@ -59,40 +73,42 @@ defmodule RoboticaUi.RootManager do
     ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.Screensaver, nil})
   end
 
+  @spec screen_on :: nil
   defp screen_on() do
     Logger.debug("screen_on")
     File.write!("/sys/class/backlight/rpi_backlight/bl_power", "0")
     System.cmd("vcgencmd", ["display_power", "1"])
   end
 
-  defp reset_timer(state, set_root) do
+  @spec reset_timer(State.t()) :: State.t()
+  defp reset_timer(state) do
     Logger.info("reset_timer")
 
-    cond do
-      is_nil(state.timer) ->
+    case state.timer do
+      nil ->
         # Screen is off.
-        set_root(state)
         screen_on()
 
-      set_root ->
-        # Screen is on, but we want to update the root.
-        set_root(state)
-
-      true ->
-        # None of the above.
-        nil
-    end
-
-    # Reset the timer
-    if not is_nil(state.timer) do
-      Process.cancel_timer(state.timer)
+      _ ->
+        # Screen is on.
+        Process.cancel_timer(state.timer)
     end
 
     timer = Process.send_after(__MODULE__, :screen_off, 30000, [])
-
     %State{state | timer: timer}
   end
 
+  @spec set_root_and_reset_timer(State.t()) :: State.t()
+  def set_root_and_reset_timer(state) do
+    {changed, state} = set_root(state)
+
+    case changed do
+      :changed -> reset_timer(state)
+      :not_changed -> state
+    end
+  end
+
+  @spec blank_now(State.t()) :: State.t()
   defp blank_now(state) do
     Logger.info("blank_now")
 
@@ -104,7 +120,7 @@ defmodule RoboticaUi.RootManager do
 
     # Delete the timer.
     timer = nil
-    %State{state | timer: timer}
+    %State{state | timer: timer, scene: nil}
   end
 
   @impl true
@@ -117,15 +133,14 @@ defmodule RoboticaUi.RootManager do
   def handle_call({:set_scene, id, scene}, _from, state) do
     Logger.info("set_scene")
     state = %State{state | scenes: %{state.scenes | id => scene}}
-    state = reset_timer(state, true)
-    set_root(state)
+    state = set_root_and_reset_timer(state)
     {:reply, :ok, state}
   end
 
   @impl true
   def handle_call({:reset_screensaver}, _from, state) do
     Logger.info("reset_screensaver")
-    state = reset_timer(state, false)
+    state = set_root_and_reset_timer(state)
     {:reply, :ok, state}
   end
 end
