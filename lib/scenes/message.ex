@@ -4,10 +4,9 @@ defmodule RoboticaUi.Scene.Message do
   alias Scenic.Graph
 
   import Scenic.Primitives
-  import RoboticaUi.Scene.Utils
 
   @graph Graph.build(font: :roboto, font_size: 24)
-         |> add_status("", :red)
+         |> text("", id: :text, text_align: :center, translate: {400, 240})
 
   # ============================================================================
   # setup
