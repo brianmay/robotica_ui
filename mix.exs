@@ -24,8 +24,8 @@ defmodule RoboticaUi.MixProject do
   defp deps do
     [
       {:scenic, "~> 0.9"},
-      {:scenic_driver_glfw, "~> 0.9"},
       {:tortoise, "~> 0.9"},
+      {:event_bus, "~> 1.6.0"}
     ]
   end
 end

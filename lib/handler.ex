@@ -1,8 +1,6 @@
 defmodule RoboticaUi.Handler do
   use Tortoise.Handler
 
-  alias Scenic.ViewPort
-
   def init(_args) do
     {:ok, %{}}
   end
@@ -13,28 +11,27 @@ defmodule RoboticaUi.Handler do
     Tortoise.publish(client_id, "cmnd/sonoff/power", "", qos: 0)
 
     # Set loading as viewport root.
-    ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.Loading, nil})
-
+    RoboticaUi.RootManager.set_scene(:root, {RoboticaUi.Scene.Loading, nil})
     {:ok, state}
   end
 
   def connection(:down, state) do
-    ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.Error, nil})
+    RoboticaUi.RootManager.set_scene(:root, {RoboticaUi.Scene.Error, nil})
     {:ok, state}
   end
 
   def connection(:terminated, state) do
-    ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.Error, nil})
+    RoboticaUi.RootManager.set_scene(:root, {RoboticaUi.Scene.Error, nil})
     {:ok, state}
   end
 
   def handle_message(["stat", "sonoff", "POWER"], "ON", state) do
-    ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.On, nil})
+    RoboticaUi.RootManager.set_scene(:root, {RoboticaUi.Scene.On, nil})
     {:ok, state}
   end
 
   def handle_message(["stat", "sonoff", "POWER"], "OFF", state) do
-    ViewPort.set_root(:main_viewport, {RoboticaUi.Scene.Off, nil})
+    RoboticaUi.RootManager.set_scene(:root, {RoboticaUi.Scene.Off, nil})
     {:ok, state}
   end
 

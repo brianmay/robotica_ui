@@ -18,6 +18,8 @@ defmodule RoboticaUi do
     # start the application with the viewport
     children = [
       supervisor(Scenic, viewports: [main_viewport_config]),
+      {RoboticaUi.RoboticaService, []},
+      {RoboticaUi.RootManager, []},
       {Tortoise.Connection,
        client_id: get_tortoise_client_id(),
        handler: {RoboticaUi.Handler, []},
@@ -25,6 +27,7 @@ defmodule RoboticaUi do
        subscriptions: [{"stat/sonoff/POWER", 0}]}
     ]
 
+    EventBus.subscribe({RoboticaUi.RoboticaService, [".*"]})
     Supervisor.start_link(children, strategy: :one_for_one)
   end
 end
