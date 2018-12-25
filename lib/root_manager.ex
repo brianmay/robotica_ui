@@ -15,10 +15,10 @@ defmodule RoboticaUi.RootManager do
 
   defmodule Tabs do
     @type t :: %__MODULE__{
-                 schedule: atom() | {atom(), any()} | nil,
-                 lock: atom() | {atom(), any()} | nil,
-                 switches: atom() | {atom(), any()} | nil
-               }
+            schedule: atom() | {atom(), any()} | nil,
+            lock: atom() | {atom(), any()} | nil,
+            switches: atom() | {atom(), any()} | nil
+          }
     defstruct [:schedule, :lock, :switches]
   end
 
@@ -30,11 +30,15 @@ defmodule RoboticaUi.RootManager do
             timer: reference() | nil,
             scene: atom() | {atom(), any()} | nil
           }
-    defstruct scenes: %Scenes{}, tabs:  %Tabs{
-        schedule: {RoboticaUi.Scene.Schedule, nil},
-        lock: {RoboticaUi.Scene.Loading, nil},
-        switches: {RoboticaUi.Scene.Switches, nil}
-      }, tab: :schedule, timer: nil, scene: nil
+    defstruct scenes: %Scenes{},
+              tabs: %Tabs{
+                schedule: {RoboticaUi.Scene.Schedule, nil},
+                lock: {RoboticaUi.Scene.Loading, nil},
+                switches: {RoboticaUi.Scene.Switches, nil}
+              },
+              tab: :schedule,
+              timer: nil,
+              scene: nil
   end
 
   def start_link(_opts) do
@@ -68,7 +72,6 @@ defmodule RoboticaUi.RootManager do
 
   @spec set_root(State.t()) :: {:changed | :not_changed, State.t()}
   defp set_root(%State{} = state) do
-
     root_scene =
       cond do
         not is_nil(state.scenes.message) -> state.scenes.message
