@@ -3,17 +3,16 @@ defmodule RoboticaUi.Scene.Loading do
 
   alias Scenic.Graph
 
-  import RoboticaUi.Scene.Utils
+  import Scenic.Primitives
 
-  @graph Graph.build(font: :roboto, font_size: 24)
-         |> add_status("Loading...", :red)
+  @graph Graph.build(font: :roboto, font_size: 36)
+         |> text("Loading...", id: :text, text_align: :center, translate: {400, 240})
 
   # ============================================================================
   # setup
 
   # --------------------------------------------------------
-  def init(_, _opts) do
-    push_graph(@graph)
+  def init(_params, _opts) do
     {:ok, %{}}
   end
 end

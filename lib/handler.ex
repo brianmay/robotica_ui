@@ -11,17 +11,17 @@ defmodule RoboticaUi.Handler do
     Tortoise.publish(client_id, "cmnd/sonoff/power", "", qos: 0)
 
     # Set loading as viewport root.
-    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.Loading, nil})
+    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.Error, text: "Loading"})
     {:ok, state}
   end
 
   def connection(:down, state) do
-    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.Error, nil})
+    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.Error, text: "MQTT server down"})
     {:ok, state}
   end
 
   def connection(:terminated, state) do
-    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.Error, nil})
+    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.Error, text: "MQTT server terminated"})
     {:ok, state}
   end
 

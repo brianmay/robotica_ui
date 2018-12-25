@@ -3,7 +3,6 @@ defmodule RoboticaUi.Components.Nav do
 
   use Scenic.Component
 
-  alias Scenic.ViewPort
   alias Scenic.Graph
 
   import Scenic.Primitives
