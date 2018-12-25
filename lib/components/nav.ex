@@ -60,7 +60,7 @@ defmodule RoboticaUi.Components.Nav do
       |> line({{0, 200}, {100, 200}}, stroke: {1, :red})
       |> line({{0, 300}, {100, 300}}, stroke: {1, :red})
       |> rect({100, 100}, fill: :red, translate: icon_position)
-      |> analog_clock(radius: 40, translate: {50, 50})
+      |> analog_clock(radius: 40, translate: {50, 50}, timezone: "Australia/Melbourne")
       |> rect({80, 80}, fill: {:black, 0}, translate: {10, 10})
       |> rect({80, 80}, fill: {:image, @lock_hash}, translate: {10, 110})
       |> rect({80, 80}, fill: {:image, @switch_hash}, translate: {10, 210})
