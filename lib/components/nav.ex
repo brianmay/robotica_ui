@@ -33,17 +33,18 @@ defmodule RoboticaUi.Components.Nav do
     click_x >= x and click_x < x2 and click_y >= y and click_y < y2
   end
 
+  @graph Graph.build(styles: %{}, font_size: 20)
+         |> rect({100, 400}, fill: :green)
+         |> line({{0, 100}, {100, 100}}, stroke: {1, :red})
+         |> line({{0, 200}, {100, 200}}, stroke: {1, :red})
+         |> line({{0, 300}, {100, 300}}, stroke: {1, :red})
+
   def init(tab, opts) do
     lock_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/lock.png")
     switch_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/switch.png")
 
     Scenic.Cache.File.load(lock_path, @lock_hash)
     Scenic.Cache.File.load(switch_path, @switch_hash)
-
-    # Get the viewport size
-    {:ok, %ViewPort.Status{size: {_width, height}}} =
-      opts[:viewport]
-      |> ViewPort.info()
 
     scenes = Enum.filter(@scenes, fn {scene_tab, _} -> scene_tab == tab end)
 
@@ -54,11 +55,7 @@ defmodule RoboticaUi.Components.Nav do
       end
 
     graph =
-      Graph.build(styles: %{}, font_size: 20)
-      |> rect({100, height}, fill: :green)
-      |> line({{0, 100}, {100, 100}}, stroke: {1, :red})
-      |> line({{0, 200}, {100, 200}}, stroke: {1, :red})
-      |> line({{0, 300}, {100, 300}}, stroke: {1, :red})
+      @graph
       |> rect({100, 100}, fill: :red, translate: icon_position)
       |> analog_clock(radius: 40, translate: {50, 50}, timezone: "Australia/Melbourne")
       |> rect({80, 80}, fill: {:black, 0}, translate: {10, 10})

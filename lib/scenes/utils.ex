@@ -4,7 +4,7 @@ defmodule RoboticaUi.Scene.Utils do
 
   def add_button(graph, label, id, x, y) do
     x = x * 100 + 120
-    y = y * 100 + 20
+    y = y * 100 + 50
 
     button(graph, label, id: id, translate: {x, y}, width: 80, height: 80)
   end

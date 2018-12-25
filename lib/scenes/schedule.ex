@@ -24,9 +24,11 @@ defmodule RoboticaUi.Scene.Schedule do
     push_graph(@graph)
     RoboticaUi.RoboticaService.register(self())
     event_params = %{topic: :request_schedule}
-    EventSource.notify(event_params) do
+
+    EventSource.notify event_params do
       nil
     end
+
     {:ok, %{viewport: opts[:viewport]}}
   end
 
@@ -36,9 +38,9 @@ defmodule RoboticaUi.Scene.Schedule do
   end
 
   def date_time_to_local(dt) do
-        dt
-        |> Calendar.DateTime.shift_zone!("Australia/Melbourne")
-        |> Timex.format!("%T", :strftime)
+    dt
+    |> Calendar.DateTime.shift_zone!("Australia/Melbourne")
+    |> Timex.format!("%T", :strftime)
   end
 
   def filter_event({:schedule, steps}, _, state) do
@@ -49,25 +51,28 @@ defmodule RoboticaUi.Scene.Schedule do
 
     @graph
     |> group(fn graph ->
-          {graph, _} = Enum.reduce(steps, {graph, 0}, fn step, {graph, y} ->
-            Enum.reduce(step.tasks, {graph, y}, fn task, {graph, y} ->
-              text =
-                case task.action.message do
-                  nil -> nil
-                  msg -> msg.text
-                end
+      {graph, _} =
+        Enum.reduce(steps, {graph, 0}, fn step, {graph, y} ->
+          Enum.reduce(step.tasks, {graph, y}, fn task, {graph, y} ->
+            text =
+              case task.action.message do
+                nil -> nil
+                msg -> msg.text
+              end
 
-              graph =
-                graph
-                |> text(date_time_to_local(step.required_time), translate: {110, y * 40 + 70})
-                |> text(Enum.join(task.locations, ", "), translate: {210, y * 40 + 70})
-                |> text(text || "N/A", translate: {410, y * 40 + 70})
-              {graph, y + 1}
-            end)
+            graph =
+              graph
+              |> text(date_time_to_local(step.required_time), translate: {110, y * 40 + 70})
+              |> text(Enum.join(task.locations, ", "), translate: {210, y * 40 + 70})
+              |> text(text || "N/A", translate: {410, y * 40 + 70})
+
+            {graph, y + 1}
           end)
-          graph
         end)
-    |> line({{110, 40}, {width-10, 40}}, stroke: {1, :red})
+
+      graph
+    end)
+    |> line({{110, 40}, {width - 10, 40}}, stroke: {1, :red})
     |> push_graph()
 
     {:stop, state}
