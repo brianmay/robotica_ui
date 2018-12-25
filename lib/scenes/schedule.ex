@@ -10,7 +10,7 @@ defmodule RoboticaUi.Scene.Schedule do
   alias RoboticaUi.Components.Nav
 
   @graph Graph.build(font: :roboto, font_size: 24)
-         |> rect({800, 480}, fill: :black)
+         |> rect({800, 480}, fill: {:red, 0})
          |> Nav.add_to_graph(:schedule)
          |> text("Time", text_align: :left, translate: {110, 30})
          |> text("Locations", text_align: :left, translate: {210, 30})

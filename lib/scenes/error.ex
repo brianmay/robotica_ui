@@ -8,6 +8,7 @@ defmodule RoboticaUi.Scene.Error do
   alias RoboticaUi.Components.Nav
 
   @graph Graph.build(font: :roboto, font_size: 24)
+         |> rect({800, 480}, fill: {:red, 0})
          |> add_status("Error", :red)
          |> Nav.add_to_graph(:lock)
 
@@ -23,5 +24,10 @@ defmodule RoboticaUi.Scene.Error do
     |> push_graph()
 
     {:ok, %{}}
+  end
+
+  def handle_input(_event, _context, state) do
+    RoboticaUi.RootManager.reset_screensaver()
+    {:noreply, state}
   end
 end

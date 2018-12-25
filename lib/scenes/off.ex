@@ -8,7 +8,7 @@ defmodule RoboticaUi.Scene.Off do
   alias RoboticaUi.Components.Nav
 
   @graph Graph.build(font: :roboto, font_size: 24)
-         |> rect({800, 480}, fill: :black)
+         |> rect({800, 480}, fill: {:red, 0})
          |> add_button("C", :btn_clear, 0, 3)
          |> add_button("0", "0", 1, 3)
          |> add_button("E", :btn_enter, 2, 3)
