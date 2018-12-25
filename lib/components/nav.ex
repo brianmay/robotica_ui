@@ -34,8 +34,11 @@ defmodule RoboticaUi.Components.Nav do
   end
 
   def init(tab, opts) do
-    Scenic.Cache.File.load(@lock_path, @lock_hash)
-    Scenic.Cache.File.load(@switch_path, @switch_hash)
+    lock_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/lock.png")
+    switch_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/switch.png")
+
+    Scenic.Cache.File.load(lock_path, @lock_hash)
+    Scenic.Cache.File.load(switch_path, @switch_hash)
 
     # Get the viewport width
     {:ok, %ViewPort.Status{size: {_width, height}}} =
