@@ -16,12 +16,20 @@ defmodule RoboticaUi.Handler do
   end
 
   def connection(:down, state) do
-    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.Error, text: "MQTT server down"})
+    RoboticaUi.RootManager.set_tab_scene(
+      :lock,
+      {RoboticaUi.Scene.Error, text: "MQTT server down"}
+    )
+
     {:ok, state}
   end
 
   def connection(:terminated, state) do
-    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.Error, text: "MQTT server terminated"})
+    RoboticaUi.RootManager.set_tab_scene(
+      :lock,
+      {RoboticaUi.Scene.Error, text: "MQTT server terminated"}
+    )
+
     {:ok, state}
   end
 
