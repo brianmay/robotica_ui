@@ -40,7 +40,7 @@ defmodule RoboticaUi.Components.Nav do
     Scenic.Cache.File.load(lock_path, @lock_hash)
     Scenic.Cache.File.load(switch_path, @switch_hash)
 
-    # Get the viewport width
+    # Get the viewport size
     {:ok, %ViewPort.Status{size: {_width, height}}} =
       opts[:viewport]
       |> ViewPort.info()
@@ -81,8 +81,7 @@ defmodule RoboticaUi.Components.Nav do
     {:noreply, state}
   end
 
-  def handle_input(event, _context, state) do
-    IO.inspect(event)
+  def handle_input(_event, _context, state) do
     RoboticaUi.RootManager.reset_screensaver()
     {:noreply, state}
   end
