@@ -8,19 +8,33 @@ defmodule RoboticaUi.RootManager do
 
   defmodule Scenes do
     @type t :: %__MODULE__{
-            root: atom() | {atom(), any()} | nil,
             message: atom() | {atom(), any()} | nil
           }
-    defstruct [:root, :message]
+    defstruct [:message]
+  end
+
+  defmodule Tabs do
+    @type t :: %__MODULE__{
+                 schedule: atom() | {atom(), any()} | nil,
+                 lock: atom() | {atom(), any()} | nil,
+                 switches: atom() | {atom(), any()} | nil
+               }
+    defstruct [:schedule, :lock, :switches]
   end
 
   defmodule State do
     @type t :: %__MODULE__{
             scenes: Scenes.t(),
+            tabs: Tabs.t(),
+            tab: :schedule | :lock,
             timer: reference() | nil,
             scene: atom() | {atom(), any()} | nil
           }
-    defstruct scenes: %Scenes{}, timer: nil, scene: nil
+    defstruct scenes: %Scenes{}, tabs:  %Tabs{
+        schedule: {RoboticaUi.Scene.Schedule, nil},
+        lock: {RoboticaUi.Scene.Loading, nil},
+        switches: {RoboticaUi.Scene.Switches, nil}
+      }, tab: :schedule, timer: nil, scene: nil
   end
 
   def start_link(_opts) do
@@ -32,9 +46,19 @@ defmodule RoboticaUi.RootManager do
     {:ok, %State{}}
   end
 
-  @spec set_scene(String.t(), atom() | {atom(), any()} | nil) :: nil
+  @spec set_scene(:message, atom() | {atom(), any()} | nil) :: nil
   def set_scene(id, scene) do
     GenServer.call(RoboticaUi.RootManager, {:set_scene, id, scene})
+  end
+
+  @spec set_tab_scene(:schedule | :lock | :switches, atom() | {atom(), any()} | nil) :: nil
+  def set_tab_scene(id, scene) do
+    GenServer.call(RoboticaUi.RootManager, {:set_tab_scene, id, scene})
+  end
+
+  @spec set_tab(:schedule | :lock | :switches) :: nil
+  def set_tab(id) do
+    GenServer.call(RoboticaUi.RootManager, {:set_tab, id})
   end
 
   @spec reset_screensaver :: nil
@@ -44,16 +68,17 @@ defmodule RoboticaUi.RootManager do
 
   @spec set_root(State.t()) :: {:changed | :not_changed, State.t()}
   defp set_root(%State{} = state) do
+
     root_scene =
       cond do
         not is_nil(state.scenes.message) -> state.scenes.message
-        true -> state.scenes.root
+        true -> Map.get(state.tabs, state.tab)
       end
 
     current_scene = state.scene
 
     do_change = root_scene != current_scene
-    Logger.info("set_root #{inspect do_change} #{inspect root_scene} #{inspect current_scene}")
+    Logger.info("set_root #{inspect(do_change)} #{inspect(root_scene)} #{inspect(current_scene)}")
 
     case do_change do
       true ->
@@ -118,9 +143,8 @@ defmodule RoboticaUi.RootManager do
       screen_off()
     end
 
-    # Delete the timer.
-    timer = nil
-    %State{state | timer: timer, scene: nil}
+    # Delete the timer and the current scene.
+    %State{state | timer: nil, scene: nil}
   end
 
   @impl true
@@ -131,8 +155,24 @@ defmodule RoboticaUi.RootManager do
 
   @impl true
   def handle_call({:set_scene, id, scene}, _from, state) do
-    Logger.info("set_scene")
+    Logger.info("set_scene #{inspect(id)} #{inspect(scene)}")
     state = %State{state | scenes: %{state.scenes | id => scene}}
+    state = set_root_and_reset_timer(state)
+    {:reply, :ok, state}
+  end
+
+  @impl true
+  def handle_call({:set_tab_scene, id, scene}, _from, state) do
+    Logger.info("set_tab_scene #{inspect(id)} #{inspect(scene)}")
+    state = %State{state | tabs: %{state.tabs | id => scene}}
+    state = set_root_and_reset_timer(state)
+    {:reply, :ok, state}
+  end
+
+  @impl true
+  def handle_call({:set_tab, id}, _from, state) do
+    Logger.info("set_tab #{inspect(id)}")
+    state = %State{state | tab: id}
     state = set_root_and_reset_timer(state)
     {:reply, :ok, state}
   end
@@ -140,6 +180,7 @@ defmodule RoboticaUi.RootManager do
   @impl true
   def handle_call({:reset_screensaver}, _from, state) do
     Logger.info("reset_screensaver")
+    # Unlike other functions, this should ensure screen is on even if no change in scene.
     state = set_root_and_reset_timer(state)
     {:reply, :ok, state}
   end

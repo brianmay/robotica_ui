@@ -11,27 +11,27 @@ defmodule RoboticaUi.Handler do
     Tortoise.publish(client_id, "cmnd/sonoff/power", "", qos: 0)
 
     # Set loading as viewport root.
-    RoboticaUi.RootManager.set_scene(:root, {RoboticaUi.Scene.Loading, nil})
+    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.Loading, nil})
     {:ok, state}
   end
 
   def connection(:down, state) do
-    RoboticaUi.RootManager.set_scene(:root, {RoboticaUi.Scene.Error, nil})
+    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.Error, nil})
     {:ok, state}
   end
 
   def connection(:terminated, state) do
-    RoboticaUi.RootManager.set_scene(:root, {RoboticaUi.Scene.Error, nil})
+    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.Error, nil})
     {:ok, state}
   end
 
   def handle_message(["stat", "sonoff", "POWER"], "ON", state) do
-    RoboticaUi.RootManager.set_scene(:root, {RoboticaUi.Scene.On, nil})
+    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.On, nil})
     {:ok, state}
   end
 
   def handle_message(["stat", "sonoff", "POWER"], "OFF", state) do
-    RoboticaUi.RootManager.set_scene(:root, {RoboticaUi.Scene.Off, nil})
+    RoboticaUi.RootManager.set_tab_scene(:lock, {RoboticaUi.Scene.Off, nil})
     {:ok, state}
   end
 

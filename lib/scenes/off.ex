@@ -5,6 +5,7 @@ defmodule RoboticaUi.Scene.Off do
   import Scenic.Primitives
 
   import RoboticaUi.Scene.Utils
+  alias RoboticaUi.Components.Nav
 
   @graph Graph.build(font: :roboto, font_size: 24)
          |> rect({800, 480}, fill: :black)
@@ -21,6 +22,7 @@ defmodule RoboticaUi.Scene.Off do
          |> add_button("8", "8", 1, 0)
          |> add_button("9", "9", 2, 0)
          |> add_status("OFF", :green)
+         |> Nav.add_to_graph(:lock)
 
   # ============================================================================
   # setup

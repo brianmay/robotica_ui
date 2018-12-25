@@ -24,6 +24,7 @@ defmodule RoboticaUi.MixProject do
   defp deps do
     [
       {:scenic, "~> 0.9"},
+      {:scenic_clock, "~> 0.8.0"},
       {:tortoise, "~> 0.9"},
       {:event_bus, "~> 1.6.0"}
     ]

@@ -3,12 +3,19 @@ defmodule RoboticaUi.RoboticaService do
 
   use GenServer
 
+  defmodule State do
+    @type t :: %__MODULE__{
+            message_displayed: boolean()
+          }
+    defstruct message_displayed: false
+  end
+
   def start_link(_opts) do
     GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
   def init(_opts) do
-    {:ok, %{}}
+    {:ok, %State{}}
   end
 
   def process(event) do
@@ -18,24 +25,33 @@ defmodule RoboticaUi.RoboticaService do
   def handle_cast({:execute = topic, id}, state) do
     data = EventBus.fetch_event_data({topic, id})
 
-    case data.message.text do
-      nil ->
-        nil
+    text =
+      case data.message do
+        nil -> nil
+        msg -> msg.text
+      end
 
-      text ->
-        RoboticaUi.RootManager.set_scene(:message, {RoboticaUi.Scene.Message, text: text})
-    end
+    state =
+      case text do
+        nil ->
+          state
+
+        text ->
+          RoboticaUi.RootManager.set_scene(:message, {RoboticaUi.Scene.Message, text: text})
+          %State{state | message_displayed: true}
+      end
 
     EventBus.mark_as_completed({__MODULE__, topic, id})
-
-    #    Process.sleep(500)
-
     {:noreply, state}
   end
 
   def handle_cast({:done = topic, id}, state) do
     EventBus.fetch_event_data({topic, id})
-    RoboticaUi.RootManager.set_scene(:message, nil)
-    {:noreply, state}
+
+    if state.message_displayed do
+      RoboticaUi.RootManager.set_scene(:message, nil)
+    end
+
+    {:noreply, %State{state | message_displayed: false}}
   end
 end
