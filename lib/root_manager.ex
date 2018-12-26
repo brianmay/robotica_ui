@@ -81,7 +81,12 @@ defmodule RoboticaUi.RootManager do
     current_scene = state.scene
 
     do_change = root_scene != current_scene or force
-    Logger.info("set_root #{inspect(do_change)} #{inspect(root_scene)} #{inspect(current_scene)} #{inspect(force)}")
+
+    Logger.info(
+      "set_root #{inspect(do_change)} #{inspect(root_scene)} #{inspect(current_scene)} #{
+        inspect(force)
+      }"
+    )
 
     case do_change do
       true ->
