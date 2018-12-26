@@ -199,10 +199,17 @@ defmodule RoboticaUi.RootManager do
   def handle_call({:reset_screensaver}, _from, state) do
     Logger.info("reset_screensaver")
     # Unlike other functions, this should ensure screen is on even if no change in scene.
-    state = case screen_off?(state) do
-      true -> set_root_and_reset_timer(state, true)
-      false -> state
-    end
+    state =
+      case screen_off?(state) do
+        true ->
+          {_, state} = set_root(state, true)
+          state
+
+        false ->
+          state
+      end
+
+    state = reset_timer(state)
     {:reply, :ok, state}
   end
 end
