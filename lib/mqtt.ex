@@ -61,6 +61,9 @@ defmodule RoboticaUi.Mqtt do
         "postponed" ->
           {midnight, "cancelled"}
 
+        "clear" ->
+          {now, "done"}
+
         _ ->
           {nil, nil}
       end
