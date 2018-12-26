@@ -9,7 +9,7 @@ defmodule RoboticaUi.Scene.Switches do
 
   @graph Graph.build(font: :roboto, font_size: 24)
          |> rect({800, 480}, fill: {:red, 0})
-         |> text("BM", translate: {0 * 100 + 120, 30})
+         |> text("Brian", translate: {0 * 100 + 120, 30})
          |> text("Twins", translate: {1 * 100 + 120, 30})
          |> text("Dining", translate: {2 * 100 + 120, 30})
          |> text("Akira", translate: {3 * 100 + 120, 30})
