@@ -60,11 +60,18 @@ defmodule RoboticaUi.Scene.Schedule do
                 msg -> msg.text
               end
 
+            color =
+              case task.mark do
+                :done -> :green
+                :cancelled -> :red
+                _ -> :white
+              end
+
             graph =
               graph
-              |> text(date_time_to_local(step.required_time), translate: {110, y * 40 + 70})
-              |> text(Enum.join(task.locations, ", "), translate: {210, y * 40 + 70})
-              |> text(text || "N/A", translate: {410, y * 40 + 70})
+              |> text(date_time_to_local(step.required_time), translate: {110, y * 40 + 70}, fill: color)
+              |> text(Enum.join(task.locations, ", "), translate: {210, y * 40 + 70}, fill: color)
+              |> text(text || "N/A", translate: {410, y * 40 + 70}, fill: color)
 
             {graph, y + 1}
           end)
