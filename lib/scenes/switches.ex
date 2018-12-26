@@ -79,7 +79,7 @@ defmodule RoboticaUi.Scene.Switches do
           %{
             lights: %{
               action: "turn_on",
-              color: %{hue: 0, saturation: 0, brightness: 100, kelvin: 2500}
+              color: %{hue: 0, saturation: 0, brightness: 100, kelvin: 5000}
             }
           }
 
@@ -87,7 +87,7 @@ defmodule RoboticaUi.Scene.Switches do
           %{
             lights: %{
               action: "turn_on",
-              color: %{hue: 90, saturation: 100, brightness: 6, kelvin: 2500}
+              color: %{hue: 90, saturation: 100, brightness: 6, kelvin: 5000}
             }
           }
 
@@ -95,7 +95,7 @@ defmodule RoboticaUi.Scene.Switches do
           %{
             lights: %{
               action: "turn_on",
-              color: %{hue: 240, saturation: 50, brightness: 6, kelvin: 2500}
+              color: %{hue: 240, saturation: 50, brightness: 6, kelvin: 5000}
             }
           }
 
