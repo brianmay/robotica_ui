@@ -8,8 +8,7 @@ defmodule RoboticaUi.Components.Nav do
   import Scenic.Primitives
   import Scenic.Clock.Components
 
-  def verify(scene) when is_atom(scene), do: {:ok, scene}
-  def verify({scene, _} = data) when is_atom(scene), do: {:ok, data}
+  def verify(tab) when is_atom(tab), do: {:ok, tab}
   def verify(_), do: :invalid_data
 
   # build the path to the static asset file (compile time)

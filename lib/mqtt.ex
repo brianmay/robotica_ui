@@ -44,24 +44,24 @@ defmodule RoboticaUi.Mqtt do
   end
 
   def mark_task(task, status) do
-    id = task["id"]
-    frequency = task["frequency"]
+    id = task.id
+    frequency = task.frequency
     now = Calendar.DateTime.now_utc()
     midnight = Date.tomorrow(now) |> Date.midnight_utc()
     monday_midnight = Date.next_monday(now) |> Date.midnight_utc()
 
     {expires_time, status} =
       case status do
-        "done" ->
+        :done ->
           case frequency do
             "weekly" -> {monday_midnight, "done"}
             _ -> {midnight, "done"}
           end
 
-        "postponed" ->
+        :postponed ->
           {midnight, "cancelled"}
 
-        "clear" ->
+        :clear ->
           {now, "done"}
 
         _ ->
