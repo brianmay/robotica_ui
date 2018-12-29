@@ -6,10 +6,9 @@ defmodule RoboticaUi.RoboticaService do
 
   defmodule State do
     @type t :: %__MODULE__{
-            message_displayed: boolean(),
             scenes: list(GenServer.server())
           }
-    defstruct message_displayed: false, scenes: []
+    defstruct scenes: []
   end
 
   def start_link(_opts) do
@@ -38,28 +37,20 @@ defmodule RoboticaUi.RoboticaService do
         msg -> msg.text
       end
 
-    state =
-      case text do
-        nil ->
-          state
+    case text do
+      nil ->
+        nil
 
-        text ->
-          RoboticaUi.RootManager.set_scene(:message, {RoboticaUi.Scene.Message, text: text})
-          %State{state | message_displayed: true}
-      end
+      text ->
+        RoboticaUi.RootManager.set_scene(:message, {RoboticaUi.Scene.Message, text: text})
+
+        Process.sleep(10000)
+
+        RoboticaUi.RootManager.set_scene(:message, nil)
+    end
 
     EventBus.mark_as_completed({__MODULE__, topic, id})
     {:noreply, state}
-  end
-
-  def handle_cast({:done = topic, id}, state) do
-    EventBus.fetch_event_data({topic, id})
-
-    if state.message_displayed do
-      RoboticaUi.RootManager.set_scene(:message, nil)
-    end
-
-    {:noreply, %State{state | message_displayed: false}}
   end
 
   def handle_cast({:schedule = topic, id}, state) do
