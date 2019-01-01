@@ -67,13 +67,13 @@ defmodule RoboticaUi.Scene.Switches do
           %{message: %{text: "Test only, do not listen."}}
 
         {_, :M2} ->
-          %{message: %{text: "Tilly is a dog."}}
+          %{message: %{text: "It is time for Brian to clean his teeth."}}
 
         {_, :M3} ->
-          %{message: %{text: "Rain and shine protection."}}
+          %{message: %{text: "Tilly is a cat."}}
 
         {_, :M4} ->
-          %{message: %{text: "Woof woof woof."}}
+          %{message: %{text: "Meow Meow meow."}}
 
         {_, :On} ->
           %{
