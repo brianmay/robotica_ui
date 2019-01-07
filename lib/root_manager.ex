@@ -33,7 +33,7 @@ defmodule RoboticaUi.RootManager do
     defstruct scenes: %Scenes{},
               tabs: %Tabs{
                 schedule: {RoboticaUi.Scene.Schedule, nil},
-                lock: {RoboticaUi.Scene.Loading, nil},
+                lock: {RoboticaUi.Scene.Error, text: "Loading"},
                 switches: {RoboticaUi.Scene.Switches, nil}
               },
               tab: :schedule,
