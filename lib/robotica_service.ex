@@ -28,31 +28,6 @@ defmodule RoboticaUi.RoboticaService do
     GenServer.call(__MODULE__, {:register, pid})
   end
 
-  def handle_cast({:execute = topic, id}, state) do
-    action = EventBus.fetch_event_data({topic, id})
-
-    text =
-      case action.message do
-        nil -> nil
-        msg -> msg.text
-      end
-
-    case text do
-      nil ->
-        nil
-
-      text ->
-        RoboticaUi.RootManager.set_scene(:message, {RoboticaUi.Scene.Message, text: text})
-
-        Process.sleep(10000)
-
-        RoboticaUi.RootManager.set_scene(:message, nil)
-    end
-
-    EventBus.mark_as_completed({__MODULE__, topic, id})
-    {:noreply, state}
-  end
-
   def handle_cast({:schedule = topic, id}, state) do
     steps = EventBus.fetch_event_data({topic, id})
 

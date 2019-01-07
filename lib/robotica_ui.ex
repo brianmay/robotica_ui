@@ -27,7 +27,7 @@ defmodule RoboticaUi do
        subscriptions: [{"stat/sonoff/POWER", 0}]}
     ]
 
-    EventBus.subscribe({RoboticaUi.RoboticaService, ["^execute", "^done", "^schedule"]})
+    EventBus.subscribe({RoboticaUi.RoboticaService, ["^schedule"]})
     Supervisor.start_link(children, strategy: :one_for_one)
   end
 end
