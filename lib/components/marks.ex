@@ -8,7 +8,7 @@ defmodule RoboticaUi.Components.Marks do
   import Scenic.Components
   import Scenic.Primitives
 
-  alias RoboticaUi.Mqtt
+  alias RoboticaUi.Mark
 
   def verify(step), do: {:ok, step}
 
@@ -75,9 +75,9 @@ defmodule RoboticaUi.Components.Marks do
     task = hd(state.step.tasks)
 
     case id do
-      :btn_done -> Mqtt.mark_task(task, :done)
-      :btn_postpone -> Mqtt.mark_task(task, :postponed)
-      :btn_clear -> Mqtt.mark_task(task, :clear)
+      :btn_done -> Mark.mark_task(task, :done)
+      :btn_postpone -> Mark.mark_task(task, :postponed)
+      :btn_clear -> Mark.mark_task(task, :clear)
       :btn_cancel -> nil
     end
 

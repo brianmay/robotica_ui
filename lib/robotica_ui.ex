@@ -19,12 +19,7 @@ defmodule RoboticaUi do
     children = [
       supervisor(Scenic, viewports: [main_viewport_config]),
       {RoboticaUi.RoboticaService, []},
-      {RoboticaUi.RootManager, []},
-      {Tortoise.Connection,
-       client_id: get_tortoise_client_id(),
-       handler: {RoboticaUi.Handler, []},
-       server: {Tortoise.Transport.Tcp, host: "proxy.pri", port: 1883},
-       subscriptions: [{"stat/sonoff/POWER", 0}]}
+      {RoboticaUi.RootManager, []}
     ]
 
     EventBus.subscribe({RoboticaUi.RoboticaService, ["^schedule"]})

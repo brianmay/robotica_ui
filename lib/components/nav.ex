@@ -21,7 +21,7 @@ defmodule RoboticaUi.Components.Nav do
 
   @scenes [
     {:schedule, {0, 0}},
-    {:lock, {0, 100}},
+    {:local, {0, 100}},
     {:switches, {0, 200}},
     {:music, {0, 300}}
   ]
