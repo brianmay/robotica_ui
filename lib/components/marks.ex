@@ -13,10 +13,11 @@ defmodule RoboticaUi.Components.Marks do
   def verify(step), do: {:ok, step}
 
   @graph Graph.build(styles: %{}, font_size: 20)
+  @timezone Application.get_env(:robotica_ui, :timezone)
 
   defp date_time_to_local(dt) do
     dt
-    |> Calendar.DateTime.shift_zone!("Australia/Melbourne")
+    |> Calendar.DateTime.shift_zone!(@timezone)
     |> Timex.format!("%F %T", :strftime)
   end
 

@@ -12,6 +12,7 @@ defmodule RoboticaUi.Components.Nav do
   def verify(_), do: :invalid_data
 
   # build the path to the static asset file (compile time)
+  @timezone Application.get_env(:robotica_ui, :timezone)
   @lock_path :code.priv_dir(:robotica_ui) |> Path.join("/static/images/lock.png")
   @switch_path :code.priv_dir(:robotica_ui) |> Path.join("/static/images/switch.png")
 
@@ -56,7 +57,7 @@ defmodule RoboticaUi.Components.Nav do
     graph =
       @graph
       |> rect({100, 100}, fill: :red, translate: icon_position)
-      |> analog_clock(radius: 40, translate: {50, 50}, timezone: "Australia/Melbourne")
+      |> analog_clock(radius: 40, translate: {50, 50}, timezone: @timezone)
       |> rect({80, 80}, fill: {:black, 0}, translate: {10, 10})
       |> rect({80, 80}, fill: {:image, @lock_hash}, translate: {10, 110})
       |> rect({80, 80}, fill: {:image, @switch_hash}, translate: {10, 210})
