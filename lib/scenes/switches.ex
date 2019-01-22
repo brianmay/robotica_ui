@@ -73,14 +73,17 @@ defmodule RoboticaUi.Scene.Switches do
         false -> MapSet.put(locations, location_button)
       end
 
-    graph = Enum.reduce(state.all_locations, graph, fn location, graph ->
-      theme =
-        case MapSet.member?(locations, location) do
-          true -> :danger
-          false -> :primary
-        end
-       Graph.modify(graph, {:location, location}, &button(&1, location <> inspect(theme), theme: theme))
-    end)
+    graph =
+      Enum.reduce(state.all_locations, graph, fn location, graph ->
+        {name, theme} =
+          case MapSet.member?(locations, location) do
+            true -> {location <> "\non", :danger}
+            false -> {location, :primary}
+          end
+
+        Graph.modify(graph, {:location, location}, &button(&1, name, theme: theme))
+      end)
+
     push_graph(graph)
 
     %{state | locations: locations, graph: graph}
