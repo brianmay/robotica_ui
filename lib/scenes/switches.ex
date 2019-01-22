@@ -34,10 +34,11 @@ defmodule RoboticaUi.Scene.Switches do
 
     graph = add_text(graph, "Locations", 0, 0)
 
-    {graph, _} = Enum.reduce(all_locations, {graph, 0}, fn location, {graph,n} ->
-      graph = add_button(graph, location, {:location, location}, n+1, 0)
-      {graph, n+1}
-    end)
+    {graph, _} =
+      Enum.reduce(all_locations, {graph, 0}, fn location, {graph, n} ->
+        graph = add_button(graph, location, {:location, location}, n + 1, 0)
+        {graph, n + 1}
+      end)
 
     push_graph(graph)
 
@@ -132,9 +133,12 @@ defmodule RoboticaUi.Scene.Switches do
       end
 
     case action do
-      nil -> nil
+      nil ->
+        nil
+
       _ ->
         event_params = %{topic: :execute}
+
         EventSource.notify event_params do
           %Robotica.Types.Task{
             locations: MapSet.to_list(state.locations),

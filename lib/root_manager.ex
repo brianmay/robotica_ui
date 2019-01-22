@@ -57,7 +57,8 @@ defmodule RoboticaUi.RootManager do
     GenServer.call(RoboticaUi.RootManager, {:set_scene, id, scene})
   end
 
-  @spec set_tab_scene(:schedule | :local | :switches | :music, atom() | {atom(), any()} | nil) :: nil
+  @spec set_tab_scene(:schedule | :local | :switches | :music, atom() | {atom(), any()} | nil) ::
+          nil
   def set_tab_scene(id, scene) do
     GenServer.call(RoboticaUi.RootManager, {:set_tab_scene, id, scene})
   end

@@ -15,5 +15,4 @@ defmodule RoboticaUi.Scene.Utils do
 
     text(graph, label, translate: {x, y}, width: 80, height: 80)
   end
-
 end

@@ -10,6 +10,7 @@ defmodule RoboticaUi.Mark do
       |> Calendar.DateTime.Format.iso8601()
 
     event_params = %{topic: :mark}
+
     EventSource.notify event_params do
       %Robotica.Types.Mark{
         id: id,

@@ -30,5 +30,4 @@ defmodule RoboticaUi.Config do
     {:ok, data} = Robotica.Validation.validate_schema(data, config_schema())
     data
   end
-
 end

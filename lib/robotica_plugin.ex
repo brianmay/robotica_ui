@@ -15,8 +15,7 @@ defmodule RoboticaUi.RoboticaPlugin do
   end
 
   def config_schema do
-    %{
-    }
+    %{}
   end
 
   def handle_cast({:execute, action}, state) do
@@ -40,5 +39,4 @@ defmodule RoboticaUi.RoboticaPlugin do
 
     {:noreply, state}
   end
-
 end
