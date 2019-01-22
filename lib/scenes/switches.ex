@@ -3,6 +3,7 @@ defmodule RoboticaUi.Scene.Switches do
   use EventBus.EventSource
 
   alias Scenic.Graph
+  import Scenic.Components
   import Scenic.Primitives
 
   import RoboticaUi.Scene.Utils
@@ -10,16 +11,16 @@ defmodule RoboticaUi.Scene.Switches do
 
   @graph Graph.build(font: :roboto, font_size: 24)
          |> rect({800, 480}, fill: {:red, 0})
-         |> text("Lights", translate: {0 * 100 + 120, 30})
-         |> text("Music", translate: {1 * 100 + 120, 30})
-         |> add_button("On", :light_on, 0, 0)
-         |> add_button("Bed", :Bed1, 0, 1)
-         |> add_button("Bed", :Bed2, 0, 2)
-         |> add_button("Off", :light_off, 0, 3)
-         |> add_button("Red", :red, 1, 0)
-         |> add_button("Green", :green, 1, 1)
-         |> add_button("Blue", :blue, 1, 2)
-         |> add_button("Off", :music_off, 1, 3)
+         |> add_text("Locations", 0, 0)
+         |> add_text("Actions", 0, 1)
+         |> add_button("On", {:action, :light_on}, 1, 1)
+         |> add_button("Bed", {:action, :Bed1}, 2, 1)
+         |> add_button("Bed", {:action, :Bed2}, 3, 1)
+         |> add_button("Off", {:action, :light_off}, 4, 1)
+         |> add_button("Red", {:action, :red}, 1, 2)
+         |> add_button("Green", {:action, :green}, 2, 2)
+         |> add_button("Blue", {:action, :blue}, 3, 2)
+         |> add_button("Off", {:action, :music_off}, 4, 2)
          |> Nav.add_to_graph(:switches)
 
   # ============================================================================
@@ -27,8 +28,20 @@ defmodule RoboticaUi.Scene.Switches do
 
   # --------------------------------------------------------
   def init(_, _opts) do
-    push_graph(@graph)
-    {:ok, RoboticaUi.Config.configuration()}
+    graph = @graph
+    configuration = RoboticaUi.Config.configuration()
+    all_locations = configuration.locations
+
+    graph = add_text(graph, "Locations", 0, 0)
+
+    {graph, _} = Enum.reduce(all_locations, {graph, 0}, fn location, {graph,n} ->
+      graph = add_button(graph, location, {:location, location}, n+1, 0)
+      {graph, n+1}
+    end)
+
+    push_graph(graph)
+
+    {:ok, %{locations: MapSet.new(), all_locations: all_locations, graph: graph}}
   end
 
   def handle_input(_event, _context, state) do
@@ -39,10 +52,42 @@ defmodule RoboticaUi.Scene.Switches do
   def filter_event({:click, button}, _, state) do
     RoboticaUi.RootManager.reset_screensaver()
 
-    locations = state.locations
-
-    action =
+    state =
       case button do
+        {:location, location_button} -> handle_location_press(location_button, state)
+        {:action, action_button} -> handle_action_press(action_button, state)
+        _ -> state
+      end
+
+    {:stop, state}
+  end
+
+  def handle_location_press(location_button, state) do
+    locations = state.locations
+    graph = state.graph
+
+    locations =
+      case MapSet.member?(locations, location_button) do
+        true -> MapSet.delete(locations, location_button)
+        false -> MapSet.put(locations, location_button)
+      end
+
+    graph = Enum.reduce(state.all_locations, graph, fn location, graph ->
+      theme =
+        case MapSet.member?(locations, location) do
+          true -> :danger
+          false -> :primary
+        end
+       Graph.modify(graph, {:location, location}, &button(&1, location <> inspect(theme), theme: theme))
+    end)
+    push_graph(graph)
+
+    %{state | locations: locations, graph: graph}
+  end
+
+  def handle_action_press(action_button, state) do
+    action =
+      case action_button do
         :light_on ->
           %Robotica.Types.Action{
             lights: %{
@@ -92,12 +137,12 @@ defmodule RoboticaUi.Scene.Switches do
         event_params = %{topic: :execute}
         EventSource.notify event_params do
           %Robotica.Types.Task{
-            locations: locations,
+            locations: MapSet.to_list(state.locations),
             action: action
           }
         end
     end
 
-    {:stop, state}
+    state
   end
 end
