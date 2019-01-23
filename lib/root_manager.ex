@@ -49,7 +49,7 @@ defmodule RoboticaUi.RootManager do
 
   @impl true
   def init(_opts) do
-    {:ok, %State{}}
+    {:ok, %State{}, {:continue, :schedule}}
   end
 
   @spec set_scene(:message, atom() | {atom(), any()} | nil) :: nil
@@ -171,6 +171,13 @@ defmodule RoboticaUi.RootManager do
 
     # Delete the timer and the current scene.
     %State{state | timer: nil}
+  end
+
+  @impl true
+  def handle_continue(tab_id, state) do
+    state = %State{state | tab: tab_id}
+    state = set_root_and_reset_timer(state)
+    {:noreply, state}
   end
 
   @impl true
