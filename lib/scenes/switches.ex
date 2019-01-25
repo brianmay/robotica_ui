@@ -3,7 +3,6 @@ defmodule RoboticaUi.Scene.Switches do
   use EventBus.EventSource
 
   alias Scenic.Graph
-  import Scenic.Components
   import Scenic.Primitives
 
   import RoboticaUi.Scene.Utils
@@ -36,7 +35,14 @@ defmodule RoboticaUi.Scene.Switches do
 
     {graph, _} =
       Enum.reduce(all_locations, {graph, 0}, fn location, {graph, n} ->
-        graph = add_button(graph, location, {:location, location}, n + 1, 0)
+        id_false = {:location, location, false}
+        id_true = {:location, location, true}
+
+        graph =
+          graph
+          |> add_button(location, id_false, n + 1, 0, theme: :primary, hidden: false)
+          |> add_button(location, id_true, n + 1, 0, theme: :danger, hidden: true)
+
         {graph, n + 1}
       end)
 
@@ -55,33 +61,39 @@ defmodule RoboticaUi.Scene.Switches do
 
     state =
       case button do
-        {:location, location_button} -> handle_location_press(location_button, state)
-        {:action, action_button} -> handle_action_press(action_button, state)
-        _ -> state
+        {:location, location_button, value} ->
+          handle_location_press(location_button, state, value)
+
+        {:action, action_button} ->
+          handle_action_press(action_button, state)
+
+        _ ->
+          state
       end
 
     {:stop, state}
   end
 
-  def handle_location_press(location_button, state) do
+  def handle_location_press(location_button, state, value) do
     locations = state.locations
     graph = state.graph
 
     locations =
-      case MapSet.member?(locations, location_button) do
+      case value do
         true -> MapSet.delete(locations, location_button)
         false -> MapSet.put(locations, location_button)
       end
 
     graph =
       Enum.reduce(state.all_locations, graph, fn location, graph ->
-        {name, theme} =
-          case MapSet.member?(locations, location) do
-            true -> {location <> "\non", :danger}
-            false -> {location, :primary}
-          end
+        value = MapSet.member?(locations, location)
 
-        Graph.modify(graph, {:location, location}, &button(&1, name, theme: theme))
+        id_false = {:location, location, false}
+        id_true = {:location, location, true}
+
+        graph
+        |> Graph.modify(id_false, &update_opts(&1, hidden: value != false))
+        |> Graph.modify(id_true, &update_opts(&1, hidden: value != true))
       end)
 
     push_graph(graph)
