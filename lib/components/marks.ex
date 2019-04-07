@@ -82,7 +82,7 @@ defmodule RoboticaUi.Components.Marks do
     end
 
     send_event({:done, state.step})
-    {:stop, state}
+    {:halt, state}
   end
 
   def handle_input(_event, _context, state) do
