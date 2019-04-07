@@ -52,17 +52,22 @@ defmodule RoboticaUi.Scene.Schedule do
     graph =
       @graph
       |> group(fn graph ->
-        {graph, _} =
-          Enum.reduce(steps, {graph, 0}, fn step, {graph, y} ->
-            Enum.reduce(step.tasks, {graph, y}, fn task, {graph, y} ->
+        steps =
+          Enum.reduce(steps, [], fn step, steps ->
+            Enum.reduce(step.tasks, steps, fn task, steps ->
               solo_step = %{step | tasks: [task]}
-
-              graph =
-                graph
-                |> Task.add_to_graph(solo_step, translate: {100, y * 40 + 40}, width: width - 100)
-
-              {graph, y + 1}
+              [solo_step | steps]
             end)
+          end)
+          |> Enum.reverse()
+
+        {graph, _} =
+          Enum.reduce(steps, {graph, 0}, fn solo_step, {graph, y} ->
+            graph =
+              graph
+              |> Task.add_to_graph(solo_step, translate: {100, y * 40 + 40}, width: width - 100)
+
+            {graph, y + 1}
           end)
 
         graph
