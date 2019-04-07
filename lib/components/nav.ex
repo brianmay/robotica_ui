@@ -40,11 +40,8 @@ defmodule RoboticaUi.Components.Nav do
          |> line({{0, 300}, {100, 300}}, stroke: {1, :red})
 
   def init(tab, opts) do
-    lock_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/lock.png")
-    switch_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/switch.png")
-
-    Scenic.Cache.Static.Texture.load(lock_path, @lock_hash)
-    Scenic.Cache.Static.Texture.load(switch_path, @switch_hash)
+    Scenic.Cache.Static.Texture.load(@lock_path, @lock_hash)
+    Scenic.Cache.Static.Texture.load(@switch_path, @switch_hash)
 
     scenes = Enum.filter(@scenes, fn {scene_tab, _} -> scene_tab == tab end)
 
