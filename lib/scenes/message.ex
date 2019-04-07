@@ -16,11 +16,11 @@ defmodule RoboticaUi.Scene.Message do
   def init(params, _opts) do
     message = Keyword.get(params, :text)
 
-    @graph
-    |> Graph.modify(:text, &text(&1, message || "Nothing"))
-    |> push_graph()
+    graph =
+      @graph
+      |> Graph.modify(:text, &text(&1, message || "Nothing"))
 
-    {:ok, %{}}
+    {:ok, %{}, push: graph}
   end
 
   def handle_input(_event, _context, state) do

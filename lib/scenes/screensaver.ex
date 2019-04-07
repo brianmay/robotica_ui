@@ -15,8 +15,7 @@ defmodule RoboticaUi.Scene.Screensaver do
 
   # --------------------------------------------------------
   def init(_, _opts) do
-    push_graph(@graph)
-    {:ok, %{}}
+    {:ok, %{}, push: @graph}
   end
 
   def handle_input(_event, _context, state) do

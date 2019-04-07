@@ -17,8 +17,8 @@ defmodule RoboticaUi.Components.Nav do
   @switch_path :code.priv_dir(:robotica_ui) |> Path.join("/static/images/switch.png")
 
   # pre-compute the hash (compile time)
-  @lock_hash Scenic.Cache.Hash.file!(@lock_path, :sha)
-  @switch_hash Scenic.Cache.Hash.file!(@switch_path, :sha)
+  @lock_hash Scenic.Cache.Support.Hash.file!(@lock_path, :sha)
+  @switch_hash Scenic.Cache.Support.Hash.file!(@switch_path, :sha)
 
   @scenes [
     {:schedule, {0, 0}},
@@ -43,8 +43,8 @@ defmodule RoboticaUi.Components.Nav do
     lock_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/lock.png")
     switch_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/switch.png")
 
-    Scenic.Cache.File.load(lock_path, @lock_hash)
-    Scenic.Cache.File.load(switch_path, @switch_hash)
+    Scenic.Cache.Static.Texture.load(lock_path, @lock_hash)
+    Scenic.Cache.Static.Texture.load(switch_path, @switch_hash)
 
     scenes = Enum.filter(@scenes, fn {scene_tab, _} -> scene_tab == tab end)
 
@@ -61,9 +61,8 @@ defmodule RoboticaUi.Components.Nav do
       |> rect({80, 80}, fill: {:black, 0}, translate: {10, 10})
       |> rect({80, 80}, fill: {:image, @lock_hash}, translate: {10, 110})
       |> rect({80, 80}, fill: {:image, @switch_hash}, translate: {10, 210})
-      |> push_graph()
 
-    {:ok, %{graph: graph, viewport: opts[:viewport]}}
+    {:ok, %{graph: graph, viewport: opts[:viewport]}, push: graph}
   end
 
   def handle_input({:cursor_button, {:left, :press, 0, click_pos}}, _context, state) do

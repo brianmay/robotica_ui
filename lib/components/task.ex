@@ -34,14 +34,14 @@ defmodule RoboticaUi.Components.Task do
         _ -> :white
       end
 
-    @graph
-    |> rect({width, 40}, fill: {:green, 0}, translate: {0, 0})
-    |> text(date_time_to_local(step.required_time), translate: {10, 30}, fill: color)
-    |> text(Enum.join(task.locations, ", "), translate: {110, 30}, fill: color)
-    |> text(text || "N/A", translate: {310, 30}, fill: color)
-    |> push_graph()
+    graph =
+      @graph
+      |> rect({width, 40}, fill: {:green, 0}, translate: {0, 0})
+      |> text(date_time_to_local(step.required_time), translate: {10, 30}, fill: color)
+      |> text(Enum.join(task.locations, ", "), translate: {110, 30}, fill: color)
+      |> text(text || "N/A", translate: {310, 30}, fill: color)
 
-    {:ok, %{step: step}}
+    {:ok, %{step: step}, push: graph}
   end
 
   def handle_input({:cursor_button, {:left, :press, 0, _click_pos}}, _context, state) do

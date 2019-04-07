@@ -23,9 +23,10 @@ defmodule RoboticaUi.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:scenic, "~> 0.9"},
-      {:scenic_clock, "~> 0.8.0"},
-      {:event_bus, "~> 1.6.0"}
+      {:scenic, "~> 0.10"},
+      {:scenic_clock, "~> 0.10.0"},
+      {:event_bus, "~> 1.6.0"},
+      {:timex, "~> 3.5.0"}
     ]
   end
 end

@@ -23,7 +23,6 @@ defmodule RoboticaUi.Scene.Schedule do
 
   # --------------------------------------------------------
   def init(_, opts) do
-    push_graph(@graph)
     RoboticaUi.RoboticaService.register(self())
 
     event_params = %{topic: :request_schedule}
@@ -39,7 +38,7 @@ defmodule RoboticaUi.Scene.Schedule do
       viewport
       |> ViewPort.info()
 
-    {:ok, %{graph: @graph, width: width, height: height}}
+    {:ok, %{graph: @graph, width: width, height: height}, push: @graph}
   end
 
   def handle_input(_event, _context, state) do
@@ -69,27 +68,23 @@ defmodule RoboticaUi.Scene.Schedule do
         graph
       end)
       |> line({{110, 40}, {width - 10, 40}}, stroke: {1, :red})
-      |> push_graph()
 
-    {:stop, %{state | graph: graph}}
+    {:halt, %{state | graph: graph}, push: graph}
   end
 
   def filter_event({:click, step}, _, state) do
-    state.graph
-    |> Marks.add_to_graph(step,
-      translate: {10, 10},
-      width: state.width - 20,
-      height: state.height - 20
-    )
-    |> push_graph()
+    graph =
+      state.graph
+      |> Marks.add_to_graph(step,
+        translate: {10, 10},
+        width: state.width - 20,
+        height: state.height - 20
+      )
 
-    {:stop, state}
+    {:halt, state, push: graph}
   end
 
   def filter_event({:done, _step}, _, state) do
-    state.graph
-    |> push_graph()
-
-    {:stop, state}
+    {:halt, state, push: state.graph}
   end
 end

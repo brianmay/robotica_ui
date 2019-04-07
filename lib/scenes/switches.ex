@@ -46,9 +46,7 @@ defmodule RoboticaUi.Scene.Switches do
         {graph, n + 1}
       end)
 
-    push_graph(graph)
-
-    {:ok, %{locations: MapSet.new(), all_locations: all_locations, graph: graph}}
+    {:ok, %{locations: MapSet.new(), all_locations: all_locations, graph: graph}, push: graph}
   end
 
   def handle_input(_event, _context, state) do
@@ -71,7 +69,7 @@ defmodule RoboticaUi.Scene.Switches do
           state
       end
 
-    {:stop, state}
+    {:halt, state, push: state.graph}
   end
 
   def handle_location_press(location_button, state, value) do
@@ -95,8 +93,6 @@ defmodule RoboticaUi.Scene.Switches do
         |> Graph.modify(id_false, &update_opts(&1, hidden: value != false))
         |> Graph.modify(id_true, &update_opts(&1, hidden: value != true))
       end)
-
-    push_graph(graph)
 
     %{state | locations: locations, graph: graph}
   end

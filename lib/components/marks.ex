@@ -65,9 +65,8 @@ defmodule RoboticaUi.Components.Marks do
         translate: {width / 2 + 5, height - 90},
         id: :btn_cancel
       )
-      |> push_graph()
 
-    {:ok, %{graph: graph, viewport: opts[:viewport], step: step}}
+    {:ok, %{graph: graph, viewport: opts[:viewport], step: step}, push: graph}
   end
 
   def filter_event({:click, id}, _, state) do

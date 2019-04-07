@@ -14,10 +14,7 @@ defmodule RoboticaUi.Scene.Loading do
 
   # --------------------------------------------------------
   def init(_params, _opts) do
-    @graph
-    |> push_graph()
-
-    {:ok, %{}}
+    {:ok, %{}, push: @graph}
   end
 
   def handle_input(_event, _context, state) do

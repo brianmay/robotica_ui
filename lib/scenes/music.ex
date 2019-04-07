@@ -15,8 +15,7 @@ defmodule RoboticaUi.Scene.Music do
 
   # --------------------------------------------------------
   def init(_, _opts) do
-    push_graph(@graph)
-    {:ok, %{}}
+    {:ok, %{}, push: @graph}
   end
 
   def handle_input(_event, _context, state) do
@@ -27,6 +26,6 @@ defmodule RoboticaUi.Scene.Music do
   def filter_event({:click, _button}, _, state) do
     RoboticaUi.RootManager.reset_screensaver()
 
-    {:stop, state}
+    {:halt, state}
   end
 end
