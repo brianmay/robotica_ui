@@ -49,7 +49,8 @@ defmodule RoboticaUi.RootManager do
 
   @impl true
   def init(_opts) do
-    {:ok, %State{}, {:continue, :schedule}}
+    state = reset_timer(%State{})
+    {:ok, state}
   end
 
   @spec set_scene(:message, atom() | {atom(), any()} | nil) :: nil
