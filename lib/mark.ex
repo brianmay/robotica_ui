@@ -12,7 +12,7 @@ defmodule RoboticaUi.Mark do
     event_params = %{topic: :mark}
 
     EventSource.notify event_params do
-      %Robotica.Types.Mark{
+      %{
         id: id,
         status: status,
         expires_time: expires

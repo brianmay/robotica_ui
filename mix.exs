@@ -29,6 +29,7 @@ defmodule RoboticaUi.MixProject do
       {:timex, "~> 3.5.0"},
       {:calendar, "~> 0.17.2"},
       {:yaml_elixir, "~> 2.1.0"},
+      {:scenic_driver_glfw, "~> 0.10"},
     ]
   end
 end

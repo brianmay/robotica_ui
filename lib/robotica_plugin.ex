@@ -2,7 +2,6 @@ defmodule RoboticaUi.RoboticaPlugin do
   @moduledoc false
 
   use GenServer
-  use Robotica.Plugins.Plugin
   require Logger
 
   defmodule State do

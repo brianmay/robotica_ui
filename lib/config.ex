@@ -22,12 +22,6 @@ defmodule RoboticaUi.Config do
   end
 
   def configuration do
-    filename =
-      Application.get_env(:robotica_ui, :config_file)
-      |> replace_values(substitutions())
-
-    {:ok, data} = YamlElixir.read_from_file(filename)
-    {:ok, data} = Robotica.Validation.validate_schema(data, config_schema())
-    data
+    %{locations: ["A", "B", "C"]}
   end
 end
