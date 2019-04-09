@@ -26,7 +26,9 @@ defmodule RoboticaUi.MixProject do
       {:scenic, "~> 0.10"},
       {:scenic_clock, "~> 0.10.0"},
       {:event_bus, "~> 1.6.0"},
-      {:timex, "~> 3.5.0"}
+      {:timex, "~> 3.5.0"},
+      {:calendar, "~> 0.17.2"},
+      {:yaml_elixir, "~> 2.1.0"},
     ]
   end
 end
