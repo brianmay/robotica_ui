@@ -2,6 +2,10 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
+config :robotica_ui,
+  config_file: "ui.yaml",
+  timezone: "Australia/Melbourne"
+
 # Configure the main viewport for the Scenic application
 config :robotica_ui, :viewport, %{
   name: :main_viewport,

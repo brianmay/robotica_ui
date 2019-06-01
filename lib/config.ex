@@ -27,7 +27,7 @@ defmodule RoboticaUi.Config do
       |> replace_values(substitutions())
 
     {:ok, data} = YamlElixir.read_from_file(filename)
-    {:ok, data} = Robotica.Validation.validate_schema(data, config_schema())
+    {:ok, data} = RoboticaPlugins.Validation.validate_schema(data, config_schema())
     data
   end
 end

@@ -101,7 +101,7 @@ defmodule RoboticaUi.Scene.Switches do
     action =
       case action_button do
         :light_on ->
-          %Robotica.Types.Action{
+          %RoboticaPlugins.Action{
             lights: %{
               action: "turn_on",
               color: %{hue: 0, saturation: 0, brightness: 100, kelvin: 5000}
@@ -109,7 +109,7 @@ defmodule RoboticaUi.Scene.Switches do
           }
 
         :Bed1 ->
-          %Robotica.Types.Action{
+          %RoboticaPlugins.Action{
             lights: %{
               action: "turn_on",
               color: %{hue: 90, saturation: 100, brightness: 6, kelvin: 5000}
@@ -117,7 +117,7 @@ defmodule RoboticaUi.Scene.Switches do
           }
 
         :Bed2 ->
-          %Robotica.Types.Action{
+          %RoboticaPlugins.Action{
             lights: %{
               action: "turn_on",
               color: %{hue: 240, saturation: 50, brightness: 6, kelvin: 5000}
@@ -125,19 +125,19 @@ defmodule RoboticaUi.Scene.Switches do
           }
 
         :light_off ->
-          %Robotica.Types.Action{lights: %{action: "turn_off"}}
+          %RoboticaPlugins.Action{lights: %{action: "turn_off"}}
 
         :red ->
-          %Robotica.Types.Action{music: %{play_list: "red"}}
+          %RoboticaPlugins.Action{music: %{play_list: "red"}}
 
         :green ->
-          %Robotica.Types.Action{music: %{play_list: "green"}}
+          %RoboticaPlugins.Action{music: %{play_list: "green"}}
 
         :blue ->
-          %Robotica.Types.Action{music: %{play_list: "blue"}}
+          %RoboticaPlugins.Action{music: %{play_list: "blue"}}
 
         :music_off ->
-          %Robotica.Types.Action{music: %{stop: true}}
+          %RoboticaPlugins.Action{music: %{stop: true}}
 
         _ ->
           nil
@@ -151,7 +151,7 @@ defmodule RoboticaUi.Scene.Switches do
         event_params = %{topic: :execute}
 
         EventSource.notify event_params do
-          %Robotica.Types.Task{
+          %RoboticaPlugins.Task{
             locations: MapSet.to_list(state.locations),
             action: action
           }
