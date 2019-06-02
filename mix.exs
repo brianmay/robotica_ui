@@ -30,7 +30,6 @@ defmodule RoboticaUi.MixProject do
       {:calendar, "~> 0.17.2"},
       {:yaml_elixir, "~> 2.4.0"},
       {:robotica_plugins, path: "../robotica_plugins", optional: true},
-      {:scenic_driver_glfw, "~> 0.10"}
     ]
   end
 end
