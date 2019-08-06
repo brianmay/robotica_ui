@@ -29,7 +29,7 @@ defmodule RoboticaUi.MixProject do
       {:timex, "~> 3.6.0"},
       {:calendar, "~> 0.17.2"},
       {:yaml_elixir, "~> 2.4.0"},
-      {:robotica_plugins, path: "../robotica_plugins", optional: true},
+      {:robotica_plugins, path: "../robotica_plugins", optional: true}
     ]
   end
 end
