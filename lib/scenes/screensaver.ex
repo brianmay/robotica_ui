@@ -7,7 +7,6 @@ defmodule RoboticaUi.Scene.Screensaver do
   import Scenic.Primitives
 
   @graph Graph.build(font: :roboto, font_size: 24)
-         |> rect({800, 480}, fill: :black)
          |> text("The screen is off", id: :text, text_align: :center, translate: {400, 240})
 
   # ============================================================================

@@ -9,7 +9,6 @@ defmodule RoboticaUi.Scene.Local do
   alias RoboticaUi.Components.Nav
 
   @graph Graph.build(font: :roboto, font_size: 24)
-         |> rect({800, 480}, fill: {:red, 0})
          |> Nav.add_to_graph(:local)
 
   # ============================================================================
@@ -74,4 +73,3 @@ defmodule RoboticaUi.Scene.Local do
     state
   end
 end
-
