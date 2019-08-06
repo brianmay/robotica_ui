@@ -1,4 +1,6 @@
 defmodule RoboticaUi.Config do
+  alias RoboticaPlugins.Schema
+
   @spec replace_values(String.t(), %{required(String.t()) => String.t()}) :: String.t()
   defp replace_values(string, values) do
     Regex.replace(~r/{([a-z_]+)?}/, string, fn _, match ->
@@ -15,9 +17,26 @@ defmodule RoboticaUi.Config do
     }
   end
 
+  defp button do
+    %{
+      name: {:string, true},
+      action: {Schema.action_schema(), true}
+    }
+  end
+
+  defp button_row do
+    %{
+      name: {:string, true},
+      buttons: {{:list, button()}, true}
+    }
+  end
+
   defp config_schema do
     %{
-      locations: {{:list, :string}, true}
+      local_locations: {{:list, :string}, true},
+      local_buttons: {{:list, button_row()}, true},
+      remote_locations: {{:list, :string}, true},
+      remote_buttons: {{:list, button_row()}, true}
     }
   end
 

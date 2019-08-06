@@ -13,17 +13,17 @@ defmodule RoboticaUi.Components.Nav do
 
   # build the path to the static asset file (compile time)
   @timezone Application.get_env(:robotica_ui, :timezone)
-  @lock_path :code.priv_dir(:robotica_ui) |> Path.join("/static/images/lock.png")
-  @switch_path :code.priv_dir(:robotica_ui) |> Path.join("/static/images/switch.png")
+  @local_path :code.priv_dir(:robotica_ui) |> Path.join("/static/images/local.png")
+  @remote_path :code.priv_dir(:robotica_ui) |> Path.join("/static/images/remote.png")
 
   # pre-compute the hash (compile time)
-  @lock_hash Scenic.Cache.Support.Hash.file!(@lock_path, :sha)
-  @switch_hash Scenic.Cache.Support.Hash.file!(@switch_path, :sha)
+  @local_hash Scenic.Cache.Support.Hash.file!(@local_path, :sha)
+  @remote_hash Scenic.Cache.Support.Hash.file!(@remote_path, :sha)
 
   @scenes [
     {:schedule, {0, 0}},
     {:local, {0, 100}},
-    {:switches, {0, 200}},
+    {:remote, {0, 200}},
     {:music, {0, 300}}
   ]
 
@@ -40,11 +40,11 @@ defmodule RoboticaUi.Components.Nav do
          |> line({{0, 300}, {100, 300}}, stroke: {1, :red})
 
   def init(tab, opts) do
-    lock_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/lock.png")
-    switch_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/switch.png")
+    local_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/local.png")
+    remote_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/remote.png")
 
-    Scenic.Cache.Static.Texture.load(lock_path, @lock_hash, scope: :global)
-    Scenic.Cache.Static.Texture.load(switch_path, @switch_hash, scope: :global)
+    Scenic.Cache.Static.Texture.load(local_path, @local_hash, scope: :global)
+    Scenic.Cache.Static.Texture.load(remote_path, @remote_hash, scope: :global)
 
     scenes = Enum.filter(@scenes, fn {scene_tab, _} -> scene_tab == tab end)
 
@@ -59,8 +59,8 @@ defmodule RoboticaUi.Components.Nav do
       |> rect({100, 100}, fill: :red, translate: icon_position)
       |> analog_clock(radius: 40, translate: {50, 50}, timezone: @timezone)
       |> rect({80, 80}, fill: {:black, 0}, translate: {10, 10})
-      |> rect({80, 80}, fill: {:image, @lock_hash}, translate: {10, 110})
-      |> rect({80, 80}, fill: {:image, @switch_hash}, translate: {10, 210})
+      |> rect({80, 80}, fill: {:image, @local_hash}, translate: {10, 110})
+      |> rect({80, 80}, fill: {:image, @remote_hash}, translate: {10, 210})
 
     {:ok, %{graph: graph, viewport: opts[:viewport]}, push: graph}
   end
