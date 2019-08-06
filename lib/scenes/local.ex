@@ -3,7 +3,6 @@ defmodule RoboticaUi.Scene.Local do
   use EventBus.EventSource
 
   alias Scenic.Graph
-  import Scenic.Primitives
 
   import RoboticaUi.Scene.Utils
   alias RoboticaUi.Components.Nav
