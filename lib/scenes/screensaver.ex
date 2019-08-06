@@ -1,20 +1,30 @@
 defmodule RoboticaUi.Scene.Screensaver do
   use Scenic.Scene
 
-  require Logger
-
   alias Scenic.Graph
+  alias Scenic.ViewPort
   import Scenic.Primitives
 
-  @graph Graph.build(font: :roboto, font_size: 24)
-         |> text("The screen is off", id: :text, text_align: :center, translate: {400, 240})
+  @graph Graph.build(font: :roboto, font_size: 36)
 
   # ============================================================================
   # setup
 
   # --------------------------------------------------------
-  def init(_, _opts) do
-    {:ok, %{}, push: @graph}
+  def init(_, opts) do
+    message = "The screen is off"
+
+    viewport = opts[:viewport]
+    {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
+
+    x = vp_width/2
+    y = vp_height/2
+
+    graph =
+      @graph
+      |> text(message, id: :text, text_align: :center, translate: {x, y})
+
+    {:ok, %{}, push: graph}
   end
 
   def handle_input(_event, _context, state) do
