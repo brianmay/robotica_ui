@@ -15,28 +15,28 @@ defmodule RoboticaUi.RootManager do
 
   defmodule Tabs do
     @type t :: %__MODULE__{
+            clock: atom() | {atom(), any()} | nil,
             schedule: atom() | {atom(), any()} | nil,
             local: atom() | {atom(), any()} | nil,
-            remote: atom() | {atom(), any()} | nil,
-            music: atom() | {atom(), any()} | nil
+            remote: atom() | {atom(), any()} | nil
           }
-    defstruct [:schedule, :local, :remote, :music]
+    defstruct [:clock, :schedule, :local, :remote]
   end
 
   defmodule State do
     @type t :: %__MODULE__{
             scenes: Scenes.t(),
             tabs: Tabs.t(),
-            tab: :schedule | :local | :remote | :music,
+            tab: :clock | :schedule | :local | :remote,
             timer: reference() | nil,
             scene: atom() | {atom(), any()} | nil
           }
     defstruct scenes: %Scenes{},
               tabs: %Tabs{
+                clock: {RoboticaUi.Scene.Clock, nil},
                 schedule: {RoboticaUi.Scene.Schedule, nil},
                 local: {RoboticaUi.Scene.Local, nil},
-                remote: {RoboticaUi.Scene.Remote, nil},
-                music: {RoboticaUi.Scene.Music, nil}
+                remote: {RoboticaUi.Scene.Remote, nil}
               },
               tab: :schedule,
               timer: nil,
@@ -58,13 +58,13 @@ defmodule RoboticaUi.RootManager do
     GenServer.call(RoboticaUi.RootManager, {:set_scene, id, scene})
   end
 
-  @spec set_tab_scene(:schedule | :local | :remote | :music, atom() | {atom(), any()} | nil) ::
+  @spec set_tab_scene(:clock | :schedule | :local | :remote, atom() | {atom(), any()} | nil) ::
           nil
   def set_tab_scene(id, scene) do
     GenServer.call(RoboticaUi.RootManager, {:set_tab_scene, id, scene})
   end
 
-  @spec set_tab(:schedule | :local | :remote | :music) :: nil
+  @spec set_tab(:clock | :schedule | :local | :remote) :: nil
   def set_tab(id) do
     GenServer.call(RoboticaUi.RootManager, {:set_tab, id})
   end

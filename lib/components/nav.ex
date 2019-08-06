@@ -13,18 +13,20 @@ defmodule RoboticaUi.Components.Nav do
 
   # build the path to the static asset file (compile time)
   @timezone Application.get_env(:robotica_ui, :timezone)
+  @schedule_path :code.priv_dir(:robotica_ui) |> Path.join("/static/images/schedule.png")
   @local_path :code.priv_dir(:robotica_ui) |> Path.join("/static/images/local.png")
   @remote_path :code.priv_dir(:robotica_ui) |> Path.join("/static/images/remote.png")
 
   # pre-compute the hash (compile time)
+  @schedule_hash Scenic.Cache.Support.Hash.file!(@schedule_path, :sha)
   @local_hash Scenic.Cache.Support.Hash.file!(@local_path, :sha)
   @remote_hash Scenic.Cache.Support.Hash.file!(@remote_path, :sha)
 
   @scenes [
-    {:schedule, {0, 0}},
-    {:local, {0, 100}},
-    {:remote, {0, 200}},
-    {:music, {0, 300}}
+    {:clock, {0, 0}},
+    {:schedule, {0, 100}},
+    {:local, {0, 200}},
+    {:remote, {0, 300}}
   ]
 
   defp in_bounding_box({click_x, click_y}, {x, y}) do
@@ -40,9 +42,11 @@ defmodule RoboticaUi.Components.Nav do
          |> line({{0, 300}, {100, 300}}, stroke: {1, :red})
 
   def init(tab, opts) do
+    schedule_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/schedule.png")
     local_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/local.png")
     remote_path = :code.priv_dir(:robotica_ui) |> Path.join("/static/images/remote.png")
 
+    Scenic.Cache.Static.Texture.load(schedule_path, @schedule_hash, scope: :global)
     Scenic.Cache.Static.Texture.load(local_path, @local_hash, scope: :global)
     Scenic.Cache.Static.Texture.load(remote_path, @remote_hash, scope: :global)
 
@@ -59,8 +63,9 @@ defmodule RoboticaUi.Components.Nav do
       |> rect({100, 100}, fill: :red, translate: icon_position)
       |> analog_clock(radius: 40, translate: {50, 50}, timezone: @timezone)
       |> rect({80, 80}, fill: {:black, 0}, translate: {10, 10})
-      |> rect({80, 80}, fill: {:image, @local_hash}, translate: {10, 110})
-      |> rect({80, 80}, fill: {:image, @remote_hash}, translate: {10, 210})
+      |> rect({80, 80}, fill: {:image, @schedule_hash}, translate: {10, 110})
+      |> rect({80, 80}, fill: {:image, @local_hash}, translate: {10, 210})
+      |> rect({80, 80}, fill: {:image, @remote_hash}, translate: {10, 310})
 
     {:ok, %{graph: graph, viewport: opts[:viewport]}, push: graph}
   end
