@@ -3,25 +3,28 @@ defmodule RoboticaUi.Scene.Remote do
   use EventBus.EventSource
 
   alias Scenic.Graph
+  alias Scenic.ViewPort
   import Scenic.Primitives
 
   import RoboticaUi.Scene.Utils
   alias RoboticaUi.Components.Nav
 
   @graph Graph.build(font: :roboto, font_size: 24)
-         |> add_text("Locations", 0, 0)
-         |> Nav.add_to_graph(:remote)
 
   # ============================================================================
   # setup
 
   # --------------------------------------------------------
-  def init(_, _opts) do
+  def init(_, opts) do
+    viewport = opts[:viewport]
+    {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
+
     graph = @graph
     configuration = RoboticaUi.Config.configuration()
     remote_locations = configuration.remote_locations
     rows = configuration.remote_buttons
 
+    graph = rect(graph, {vp_width, vp_height}, fill: :black)
     graph = add_text(graph, "Locations", 0, 0)
 
     {graph, _} =
@@ -52,6 +55,8 @@ defmodule RoboticaUi.Scene.Remote do
 
         {graph, y + 1}
       end)
+
+    graph = Nav.add_to_graph(graph, :remote)
 
     {:ok, %{locations: MapSet.new(), remote_locations: remote_locations, graph: graph},
      push: graph}

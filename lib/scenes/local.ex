@@ -3,23 +3,29 @@ defmodule RoboticaUi.Scene.Local do
   use EventBus.EventSource
 
   alias Scenic.Graph
+  alias Scenic.ViewPort
   import Scenic.Primitives
 
   import RoboticaUi.Scene.Utils
   alias RoboticaUi.Components.Nav
 
   @graph Graph.build(font: :roboto, font_size: 24)
-         |> Nav.add_to_graph(:local)
+         |> rect({800, 480}, fill: {:black, 0})
 
   # ============================================================================
   # setup
 
   # --------------------------------------------------------
-  def init(_, _opts) do
+  def init(_, opts) do
+    viewport = opts[:viewport]
+    {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
+
     graph = @graph
     configuration = RoboticaUi.Config.configuration()
     local_locations = configuration.local_locations
     rows = configuration.local_buttons
+
+    graph = rect(graph, {vp_width, vp_height}, fill: :black)
 
     {graph, _} =
       Enum.reduce(rows, {graph, 1}, fn row, {graph, y} ->
@@ -37,6 +43,7 @@ defmodule RoboticaUi.Scene.Local do
         {graph, y + 1}
       end)
 
+    graph = Nav.add_to_graph(graph, :local)
     {:ok, %{locations: MapSet.new(local_locations), graph: graph}, push: graph}
   end
 

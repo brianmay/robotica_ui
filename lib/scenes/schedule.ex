@@ -12,10 +12,6 @@ defmodule RoboticaUi.Scene.Schedule do
   alias RoboticaUi.Components.Marks
 
   @graph Graph.build(font: :roboto, font_size: 24)
-         |> Nav.add_to_graph(:schedule)
-         |> text("Time", text_align: :left, translate: {110, 30})
-         |> text("Locations", text_align: :left, translate: {210, 30})
-         |> text("Message", text_align: :left, translate: {410, 30})
 
   # ============================================================================
   # setup
@@ -31,13 +27,17 @@ defmodule RoboticaUi.Scene.Schedule do
     end
 
     viewport = opts[:viewport]
+    {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
 
-    # Get the viewport size
-    {:ok, %ViewPort.Status{size: {width, height}}} =
-      viewport
-      |> ViewPort.info()
+    graph =
+      @graph
+      |> rect({vp_width, vp_height}, fill: :black)
+      |> text("Time", text_align: :left, translate: {110, 30})
+      |> text("Locations", text_align: :left, translate: {210, 30})
+      |> text("Message", text_align: :left, translate: {410, 30})
+      |> Nav.add_to_graph(:schedule)
 
-    {:ok, %{graph: @graph, width: width, height: height}, push: @graph}
+    {:ok, %{graph: graph, empty_graph: graph, width: vp_width, height: vp_height}, push: graph}
   end
 
   def handle_input(_event, _context, state) do
@@ -49,7 +49,7 @@ defmodule RoboticaUi.Scene.Schedule do
     width = state.width
 
     graph =
-      @graph
+      state.empty_graph
       |> group(fn graph ->
         steps =
           Enum.reduce(steps, [], fn step, steps ->

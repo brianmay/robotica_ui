@@ -17,11 +17,12 @@ defmodule RoboticaUi.Scene.Message do
     viewport = opts[:viewport]
     {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
 
-    x = vp_width/2
-    y = vp_height/2
+    x = vp_width / 2
+    y = vp_height / 2
 
     graph =
       @graph
+      |> rect({vp_width, vp_height}, fill: :black)
       |> text(message, id: :text, text_align: :center, translate: {x, y})
 
     {:ok, %{}, push: graph}
