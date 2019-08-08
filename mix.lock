@@ -1,5 +1,5 @@
 %{
-  "calendar": {:hex, :calendar, "0.17.6", "ec291cb2e4ba499c2e8c0ef5f4ace974e2f9d02ae9e807e711a9b0c7850b9aee", [:mix], [{:tzdata, "~> 0.5.20 or ~> 0.1.201603 or ~> 1.0", [hex: :tzdata, repo: "hexpm", optional: false]}], "hexpm"},
+  "calendar": {:hex, :calendar, "0.18.0", "3379e03694b9faab085fa2b96fc033644395c23170248c8ce0db78e11c88056a", [:mix], [{:tzdata, "~> 0.5.20 or ~> 0.1.201603 or ~> 1.0", [hex: :tzdata, repo: "hexpm", optional: false]}], "hexpm"},
   "certifi": {:hex, :certifi, "2.5.1", "867ce347f7c7d78563450a18a6a28a8090331e77fa02380b4a21962a65d36ee5", [:rebar3], [{:parse_trans, "~>3.3", [hex: :parse_trans, repo: "hexpm", optional: false]}], "hexpm"},
   "combine": {:hex, :combine, "0.10.0", "eff8224eeb56498a2af13011d142c5e7997a80c8f5b97c499f84c841032e429f", [:mix], [], "hexpm"},
   "elixir_make": {:hex, :elixir_make, "0.6.0", "38349f3e29aff4864352084fc736fa7fa0f2995a819a737554f7ebd28b85aaab", [:mix], [], "hexpm"},
