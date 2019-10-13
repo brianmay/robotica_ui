@@ -53,6 +53,8 @@ defmodule Scenic.Clock.Analog do
       (styles[:theme] || Theme.preset(@default_theme))
       |> Theme.normalize()
 
+    timezone = styles[:timezone]
+
     # get and calc the sizes 
     radius = styles[:radius] || @default_radius
     back_size = radius * @back_size_ratio
@@ -130,6 +132,7 @@ defmodule Scenic.Clock.Analog do
     {state, graph} =
       %{
         graph: graph,
+        timezone: timezone,
         timer: nil,
         last: nil,
         seconds: !!styles[:seconds]
@@ -172,14 +175,13 @@ defmodule Scenic.Clock.Analog do
   defp update_time(
          %{
            graph: graph,
-           seconds: seconds,
+           timezone: timezone,
            last: last
          } = state
        ) do
-    {_, {h, m, s}} = time = :calendar.local_time()
-    base_time = base_time(time, seconds)
+    %{hour: h, minute: m, second: s} = time = Timex.now(timezone)
 
-    case base_time != last do
+    case time != last do
       true ->
         # get the hour and minutes as a percent of the circle
         second_percent = s / 60.0
@@ -203,13 +205,10 @@ defmodule Scenic.Clock.Analog do
           |> Graph.modify(:minute_hand, &update_opts(&1, r: @two_pi * minute_percent))
           |> Graph.modify(:second_hand, &update_opts(&1, r: @two_pi * second_percent))
 
-        {%{state | last: base_time}, graph}
+        {%{state | last: time}, graph}
 
       _ ->
         {state, nil}
     end
   end
-
-  defp base_time(time, true), do: time
-  defp base_time({d, {h, m, _}}, false), do: {d, {h, m}}
 end

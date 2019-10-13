@@ -18,7 +18,7 @@ defmodule Scenic.Clock.Digital do
   import Scenic.Primitives, only: [{:text, 2}, {:text, 3}]
 
   # formats setup
-  @default_format :hours_12
+  @default_format "%a %l:%M %p"
 
   @default_theme :dark
 
@@ -39,10 +39,11 @@ defmodule Scenic.Clock.Digital do
 
     format =
       case styles[:format] do
-        :hours_12 -> :hours_12
-        :hours_24 -> :hours_24
-        _ -> @default_format
+        nil -> @default_format
+        format -> format
       end
+
+    timezone = styles[:timezone]
 
     # set up the requested graph
     graph =
@@ -52,6 +53,7 @@ defmodule Scenic.Clock.Digital do
     {state, graph} =
       %{
         graph: graph,
+        timezone: timezone,
         format: format,
         timer: nil,
         last: nil,
@@ -94,49 +96,21 @@ defmodule Scenic.Clock.Digital do
   defp update_time(
          %{
            format: format,
-           seconds: seconds,
+           timezone: timezone,
            graph: graph,
            last: last
          } = state
        ) do
-    time = :calendar.local_time()
-    base_time = base_time(time, seconds)
+    {:ok, time} = Timex.now(timezone) |> Timex.format(format, :strftime)
 
-    case base_time != last do
+    case time != last do
       true ->
-        graph = Graph.modify(graph, :time, &text(&1, format_time(time, format, seconds)))
-        {%{state | last: base_time}, graph}
+        graph = Graph.modify(graph, :time, &text(&1, time))
+        {%{state | last: time}, graph}
 
       _ ->
         {state, nil}
     end
   end
 
-  # --------------------------------------------------------
-  defp format_time({_, {h, m, s}}, :hours_12, seconds) do
-    {h, am_pm} =
-      cond do
-        h > 12 -> {h - 12, "PM"}
-        true -> {h, "AM"}
-      end
-
-    case seconds do
-      true -> "#{h}:#{format_ms(m)}:#{format_ms(s)} #{am_pm}"
-      false -> "#{h}:#{format_ms(m)} #{am_pm}"
-    end
-  end
-
-  defp format_time({_, {h, m, s}}, :hours_24, seconds) do
-    case seconds do
-      true -> "#{h}:#{format_ms(m)}:#{format_ms(s)}"
-      false -> "#{h}:#{format_ms(m)}"
-    end
-  end
-
-  defp format_ms(m) when m >= 0 and m < 10, do: "0#{m}"
-  defp format_ms(m), do: to_string(m)
-
-  # --------------------------------------------------------
-  defp base_time(time, true), do: time
-  defp base_time({d, {h, m, _}}, false), do: {d, {h, m}}
 end
