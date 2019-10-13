@@ -18,8 +18,9 @@ defmodule RoboticaUi.Scene.Schedule do
 
   # --------------------------------------------------------
   def init(_, opts) do
-    RoboticaUi.RoboticaService.register(self())
+    RoboticaUi.Schedule.register(self())
 
+    # FIXME
     event_params = %{topic: :request_schedule}
 
     EventSource.notify event_params do

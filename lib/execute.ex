@@ -1,13 +1,17 @@
-defmodule RoboticaUi.RoboticaPlugin do
+defmodule RoboticaUi.Execute do
   @moduledoc false
 
   use GenServer
-  use RoboticaPlugins.Plugin
   require Logger
 
   defmodule State do
     @type t :: %__MODULE__{}
     defstruct []
+  end
+
+  def start_link(default) do
+    name = default[:name]
+    GenServer.start_link(__MODULE__, nil, name: name)
   end
 
   def init(_opts) do
@@ -16,6 +20,10 @@ defmodule RoboticaUi.RoboticaPlugin do
 
   def config_schema do
     %{}
+  end
+
+  def execute(action) do
+    GenServer.cast(:ui_execute, {:execute, action})
   end
 
   def handle_cast({:execute, action}, state) do
