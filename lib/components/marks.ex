@@ -25,7 +25,7 @@ defmodule RoboticaUi.Components.Marks do
     width = opts[:styles][:width]
     height = opts[:styles][:height]
 
-    task = hd(step.tasks)
+    task = step.task
 
     text =
       case task.action.message do
@@ -72,12 +72,10 @@ defmodule RoboticaUi.Components.Marks do
   def filter_event({:click, id}, _, state) do
     RoboticaUi.RootManager.reset_screensaver()
 
-    task = hd(state.step.tasks)
-
     case id do
-      :btn_done -> Mark.mark_task(task, :done)
-      :btn_postpone -> Mark.mark_task(task, :postponed)
-      :btn_clear -> Mark.mark_task(task, :clear)
+      :btn_done -> Mark.mark_task(state.step, :done)
+      :btn_postpone -> Mark.mark_task(state.step, :postponed)
+      :btn_clear -> Mark.mark_task(state.step, :clear)
       :btn_cancel -> nil
     end
 

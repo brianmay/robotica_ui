@@ -112,5 +112,4 @@ defmodule Scenic.Clock.Digital do
         {state, nil}
     end
   end
-
 end

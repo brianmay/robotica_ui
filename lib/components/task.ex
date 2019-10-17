@@ -19,7 +19,7 @@ defmodule RoboticaUi.Components.Task do
 
   def init(step, opts) do
     width = opts[:styles][:width]
-    task = hd(step.tasks)
+    task = step.task
 
     text =
       case task.action.message do

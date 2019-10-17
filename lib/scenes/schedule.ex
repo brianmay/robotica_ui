@@ -55,7 +55,12 @@ defmodule RoboticaUi.Scene.Schedule do
         steps =
           Enum.reduce(steps, [], fn step, steps ->
             Enum.reduce(step.tasks, steps, fn task, steps ->
-              solo_step = %{step | tasks: [task]}
+              solo_step = %RoboticaPlugins.SingleStep{
+                required_time: step.required_time,
+                latest_time: step.latest_time,
+                task: task
+              }
+
               [solo_step | steps]
             end)
           end)
