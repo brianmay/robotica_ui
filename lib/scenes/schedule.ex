@@ -20,12 +20,11 @@ defmodule RoboticaUi.Scene.Schedule do
   def init(_, opts) do
     RoboticaUi.Schedule.register(self())
 
-    # FIXME
-    event_params = %{topic: :request_schedule}
-
-    EventSource.notify event_params do
-      nil
-    end
+    schedule =
+      case RoboticaUi.Schedule.get_schedule() do
+        {:ok, schedule} -> schedule
+        {:error, _} -> []
+      end
 
     viewport = opts[:viewport]
     {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
@@ -36,6 +35,7 @@ defmodule RoboticaUi.Scene.Schedule do
       |> text("Time", text_align: :left, translate: {110, 30})
       |> text("Locations", text_align: :left, translate: {210, 30})
       |> text("Message", text_align: :left, translate: {410, 30})
+      |> update_schedule(schedule, vp_width)
       |> Nav.add_to_graph(:schedule)
 
     {:ok, %{graph: graph, empty_graph: graph, width: vp_width, height: vp_height}, push: graph}
@@ -46,38 +46,41 @@ defmodule RoboticaUi.Scene.Schedule do
     {:noreply, state}
   end
 
-  def filter_event({:schedule, steps}, _, state) do
-    width = state.width
+  defp update_schedule(graph, steps, width) do
+    graph
+    |> group(fn graph ->
+      steps =
+        Enum.reduce(steps, [], fn step, steps ->
+          Enum.reduce(step.tasks, steps, fn task, steps ->
+            solo_step = %RoboticaPlugins.SingleStep{
+              required_time: step.required_time,
+              latest_time: step.latest_time,
+              task: task
+            }
 
+            [solo_step | steps]
+          end)
+        end)
+        |> Enum.reverse()
+
+      {graph, _} =
+        Enum.reduce(steps, {graph, 0}, fn solo_step, {graph, y} ->
+          graph =
+            graph
+            |> Task.add_to_graph(solo_step, translate: {100, y * 40 + 40}, width: width - 100)
+
+          {graph, y + 1}
+        end)
+
+      graph
+    end)
+    |> line({{110, 40}, {width - 10, 40}}, stroke: {1, :red})
+  end
+
+  def filter_event({:schedule, steps}, _, state) do
     graph =
       state.empty_graph
-      |> group(fn graph ->
-        steps =
-          Enum.reduce(steps, [], fn step, steps ->
-            Enum.reduce(step.tasks, steps, fn task, steps ->
-              solo_step = %RoboticaPlugins.SingleStep{
-                required_time: step.required_time,
-                latest_time: step.latest_time,
-                task: task
-              }
-
-              [solo_step | steps]
-            end)
-          end)
-          |> Enum.reverse()
-
-        {graph, _} =
-          Enum.reduce(steps, {graph, 0}, fn solo_step, {graph, y} ->
-            graph =
-              graph
-              |> Task.add_to_graph(solo_step, translate: {100, y * 40 + 40}, width: width - 100)
-
-            {graph, y + 1}
-          end)
-
-        graph
-      end)
-      |> line({{110, 40}, {width - 10, 40}}, stroke: {1, :red})
+      |> update_schedule(steps, state.width)
 
     {:halt, %{state | graph: graph}, push: graph}
   end
