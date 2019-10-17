@@ -47,22 +47,23 @@ defmodule RoboticaUi.Scene.Schedule do
   end
 
   defp update_schedule(graph, steps, width) do
+    steps =
+      Enum.reduce(steps, [], fn step, steps ->
+        Enum.reduce(step.tasks, steps, fn task, steps ->
+          solo_step = %RoboticaPlugins.SingleStep{
+          required_time: step.required_time,
+          latest_time: step.latest_time,
+          task: task
+        }
+
+          [solo_step | steps]
+        end)
+      end)
+      |> Enum.reverse()
+      |> Enum.take(20)
+
     graph
     |> group(fn graph ->
-      steps =
-        Enum.reduce(steps, [], fn step, steps ->
-          Enum.reduce(step.tasks, steps, fn task, steps ->
-            solo_step = %RoboticaPlugins.SingleStep{
-              required_time: step.required_time,
-              latest_time: step.latest_time,
-              task: task
-            }
-
-            [solo_step | steps]
-          end)
-        end)
-        |> Enum.reverse()
-
       {graph, _} =
         Enum.reduce(steps, {graph, 0}, fn solo_step, {graph, y} ->
           graph =
