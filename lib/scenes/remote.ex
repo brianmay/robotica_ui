@@ -6,6 +6,7 @@ defmodule RoboticaUi.Scene.Remote do
   alias Scenic.ViewPort
   import Scenic.Primitives
 
+  alias RoboticaUi.Layout
   import RoboticaUi.Scene.Utils
   alias RoboticaUi.Components.Nav
 
@@ -19,13 +20,14 @@ defmodule RoboticaUi.Scene.Remote do
     viewport = opts[:viewport]
     {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
 
-    graph = @graph
     configuration = RoboticaUi.Config.configuration()
     remote_locations = configuration.remote_locations
     rows = configuration.remote_buttons
 
-    graph = rect(graph, {vp_width, vp_height}, fill: :black)
-    graph = add_text(graph, "Locations", 0, 0)
+    graph =
+      @graph
+      |> Layout.add_background(vp_width, vp_height)
+      |> add_text("Locations", 0, 0)
 
     {graph, _} =
       Enum.reduce(remote_locations, {graph, 1}, fn location, {graph, x} ->

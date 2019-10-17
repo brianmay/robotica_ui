@@ -5,6 +5,8 @@ defmodule RoboticaUi.Scene.Message do
   alias Scenic.ViewPort
   import Scenic.Primitives
 
+  alias RoboticaUi.Layout
+
   @graph Graph.build(font: :roboto, font_size: 36)
 
   # ============================================================================
@@ -22,7 +24,7 @@ defmodule RoboticaUi.Scene.Message do
 
     graph =
       @graph
-      |> rect({vp_width, vp_height}, fill: :black)
+      |> Layout.add_background(vp_width, vp_height)
       |> text(message, id: :text, text_align: :center, translate: {x, y})
 
     {:ok, %{}, push: graph}

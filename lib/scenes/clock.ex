@@ -3,9 +3,9 @@ defmodule RoboticaUi.Scene.Clock do
 
   alias Scenic.Graph
   alias Scenic.ViewPort
-  import Scenic.Primitives
   import Scenic.Clock.Components
 
+  alias RoboticaUi.Layout
   alias RoboticaUi.Components.Nav
 
   @timezone Application.get_env(:robotica_ui, :timezone)
@@ -36,7 +36,7 @@ defmodule RoboticaUi.Scene.Clock do
 
     graph =
       @graph
-      |> rect({vp_width, vp_height}, fill: :black)
+      |> Layout.add_background(vp_width, vp_height)
       |> digital_clock(translate: {ul_margin_x, 25}, timezone: @timezone)
       |> analog_clock(
         radius: radius,

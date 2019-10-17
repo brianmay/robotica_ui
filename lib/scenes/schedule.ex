@@ -7,6 +7,7 @@ defmodule RoboticaUi.Scene.Schedule do
   alias Scenic.ViewPort
   import Scenic.Primitives
 
+  alias RoboticaUi.Layout
   alias RoboticaUi.Components.Nav
   alias RoboticaUi.Components.Task
   alias RoboticaUi.Components.Marks
@@ -31,7 +32,7 @@ defmodule RoboticaUi.Scene.Schedule do
 
     graph =
       @graph
-      |> rect({vp_width, vp_height}, fill: :black)
+      |> Layout.add_background(vp_width, vp_height)
       |> text("Time", text_align: :left, translate: {110, 30})
       |> text("Locations", text_align: :left, translate: {210, 30})
       |> text("Message", text_align: :left, translate: {410, 30})

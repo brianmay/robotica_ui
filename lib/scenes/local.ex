@@ -6,6 +6,7 @@ defmodule RoboticaUi.Scene.Local do
   alias Scenic.ViewPort
   import Scenic.Primitives
 
+  alias RoboticaUi.Layout
   import RoboticaUi.Scene.Utils
   alias RoboticaUi.Components.Nav
 
@@ -25,7 +26,7 @@ defmodule RoboticaUi.Scene.Local do
     local_locations = configuration.local_locations
     rows = configuration.local_buttons
 
-    graph = rect(graph, {vp_width, vp_height}, fill: :black)
+    graph = Layout.add_background(graph, vp_width, vp_height)
 
     {graph, _} =
       Enum.reduce(rows, {graph, 1}, fn row, {graph, y} ->
