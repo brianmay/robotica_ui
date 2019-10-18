@@ -89,7 +89,7 @@ defmodule RoboticaUi.Scene.Schedule do
 
   def filter_event({:click, step}, _, state) do
     graph =
-      state.graph
+      @graph
       |> Marks.add_to_graph(step,
         translate: {10, 10},
         width: state.width - 20,
