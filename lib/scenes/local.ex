@@ -29,7 +29,7 @@ defmodule RoboticaUi.Scene.Local do
     graph = Layout.add_background(graph, vp_width, vp_height)
 
     {graph, _} =
-      Enum.reduce(rows, {graph, 1}, fn row, {graph, y} ->
+      Enum.reduce(rows, {graph, 0}, fn row, {graph, y} ->
         graph = add_text(graph, row.name, 0, y)
 
         {graph, _} =
