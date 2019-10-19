@@ -30,16 +30,20 @@ defmodule RoboticaUi.Scene.Schedule do
     viewport = opts[:viewport]
     {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
 
-    graph =
+    empty_graph =
       @graph
       |> Layout.add_background(vp_width, vp_height)
       |> text("Time", text_align: :left, translate: {110, 30})
       |> text("Locations", text_align: :left, translate: {210, 30})
       |> text("Message", text_align: :left, translate: {410, 30})
-      |> update_schedule(schedule, vp_width)
       |> Nav.add_to_graph(:schedule)
 
-    {:ok, %{graph: graph, empty_graph: graph, width: vp_width, height: vp_height}, push: graph}
+    graph =
+      empty_graph
+      |> update_schedule(schedule, vp_width)
+
+    {:ok, %{graph: graph, empty_graph: empty_graph, width: vp_width, height: vp_height},
+     push: graph}
   end
 
   def handle_input(_event, _context, state) do
